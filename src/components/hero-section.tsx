@@ -2,15 +2,19 @@ import Image from "next/image";
 
 export default function HeroSection() {
   return (
-    <section className="relative mt-20 h-[calc(100vh-1px)] w-full" id="home">
-      {/* Mobile */}
+    <section
+      id="home"
+      className="relative w-full bg-black/80 pt-20 min-h-[52svh] md:min-h-[100svh] overflow-hidden"
+    >
+      {/* Mobile – imagem inteira */}
       <Image
         src="/banner_principal_mobile.webp"
         alt="Banner principal da Volkano"
         fill
-        className="object-cover object-center md:hidden"
-        quality={100}
         priority
+        quality={100}
+        sizes="100vw"
+        className="md:hidden object-contain"
       />
 
       {/* Desktop */}
@@ -18,9 +22,10 @@ export default function HeroSection() {
         src="/banner_principal_desktop.webp"
         alt="Banner principal da Volkano"
         fill
-        className="hidden object-cover object-[center_60%] md:block"
-        quality={100}
         priority
+        quality={100}
+        sizes="100vw"
+        className="hidden md:block object-cover object-[center_60%]"
       />
     </section>
   );

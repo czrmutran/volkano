@@ -60,7 +60,7 @@ export default function EquipamentosSection() {
   };
 
   return (
-    <section className="bg-black/80 py-16 sm:py-6 lg:py-14" id="equipamentos">
+    <section className="bg-black/80 py-16 sm:py-6 lg:py-14 overflow-hidden" id="equipamentos">
       <div className="container mx-auto px-4">
         {/* Título + subtítulo */}
         <div className="text-center">
@@ -88,45 +88,45 @@ export default function EquipamentosSection() {
 
         {/* Grid */}
         <motion.div
-  className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10"
-  variants={containerVariants}
-  initial="hidden"
-  whileInView="visible"
-  viewport={{ once: true, amount: 0.2 }}
->
-  {equipamentos.map((item) => (
-    <motion.div
-      key={item.desc}
-      variants={itemVariants}
-      className="w-full h-full transition-transform duration-300 ease-in-out hover:scale-110"
-    >
-      <Link
-        href={item.href}
-        className="group relative flex flex-col h-full w-full overflow-hidden rounded-md border border-white/15 bg-black/80"
-      >
-        {/* Imagem com proporção tipo poster (mais “quadrada”) */}
-        <div className="relative w-full aspect-[3/4]">
-          <Image
-            src={item.img}
-            alt={item.alt}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-            quality={90}
-          />
+          className="mt-12 grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-5 min-w-0"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+        >
+          {equipamentos.map((item) => (
+            <motion.div
+              key={item.desc}
+              variants={itemVariants}
+              className="w-full h-full transition-transform duration-300 ease-in-out md:hover:scale-105"
+            >
+              <Link
+                href={item.href}
+                className="group relative flex min-w-0 flex-col h-full w-full overflow-hidden rounded-md border border-white/15 bg-black/80"
+              >
+                {/* Imagem com proporção tipo poster (mais “quadrada”) */}
+                <div className="relative w-full aspect-[3/4]">
+                  <Image
+                    src={item.img}
+                    alt={item.alt}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                    quality={90}
+                  />
 
-          {/* Overlay bem mais leve (pra parecer com a 2ª imagem) */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
-        </div>
+                  {/* Overlay bem mais leve (pra parecer com a 2ª imagem) */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
+                </div>
 
-        {/* Rodapé do card (menos “flutuante”, mais clean) */}
-        <div className="flex flex-1 items-start justify-between gap-3 px-4 py-4">
-          <p className="text-sm font-semibold text-white/90 leading-snug">
-            {item.desc}
-          </p>
-        </div>
-      </Link>
+                {/* Rodapé do card (menos “flutuante”, mais clean) */}
+                <div className="flex flex-1 items-start justify-between gap-3 px-4 py-4">
+                  <p className="text-sm font-semibold text-white/90 leading-snug">
+                    {item.desc}
+                  </p>
+                </div>
+              </Link>
             </motion.div>
-        ))}
+          ))}
         </motion.div>
         <div className="mt-14 flex justify-center">
           <a
