@@ -4,9 +4,10 @@ export default function HeroSection() {
   return (
     <section
       id="home"
-      className="relative w-full bg-black/80 pt-20 min-h-[52svh] md:min-h-[100svh] overflow-hidden"
+      className="relative mt-20 w-full bg-black
+                 h-[34svh] md:h-[calc(100vh-1px)]"
     >
-      {/* Mobile – imagem inteira */}
+      {/* Mobile */}
       <Image
         src="/banner_principal_mobile.webp"
         alt="Banner principal da Volkano"
@@ -14,7 +15,7 @@ export default function HeroSection() {
         priority
         quality={100}
         sizes="100vw"
-        className="md:hidden object-contain"
+        className="md:hidden object-contain object-top"
       />
 
       {/* Desktop */}

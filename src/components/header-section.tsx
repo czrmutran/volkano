@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronRight } from "lucide-react";
 
 const navLinks = [
   { href: "#home", label: "Início" },
@@ -18,22 +18,25 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
+    document.body.style.overflow = isMenuOpen ? "hidden" : "auto";
     return () => {
       document.body.style.overflow = "auto";
     };
+  }, [isMenuOpen]);
+
+  // Fechar com ESC
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsMenuOpen(false);
+    };
+    if (isMenuOpen) window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
   }, [isMenuOpen]);
 
   const handleLinkClick = (
@@ -42,37 +45,30 @@ export default function Header() {
   ) => {
     if (href.startsWith("#")) {
       e.preventDefault();
+
       if (href === "#home") {
         window.scrollTo({ top: 0, behavior: "smooth" });
-      } else if (href === "#equipamentos") {
-        const element = document.querySelector(href);
-        if (element) {
-          const headerOffset = 1;
-          const elementPosition = element.getBoundingClientRect().top;
+      } else {
+        const el = document.querySelector(href);
+        if (el) {
+          const headerOffset = 80;
+          const elementPosition = el.getBoundingClientRect().top;
           const offsetPosition = elementPosition + window.scrollY - headerOffset;
 
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: "smooth",
-          });
+          window.scrollTo({ top: offsetPosition, behavior: "smooth" });
         }
-      } else {
-        document.querySelector(href)?.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
       }
     }
-    // Fecha o menu mobile após o clique
+
     setIsMenuOpen(false);
   };
 
-  // Header escuro no topo, branco ao rolar / abrir menu
-  const headerClasses = `fixed top-0 left-0 w-full z-50 transition-all duration-300 
-  ${isScrolled || isMenuOpen 
-    ? "bg-black/50 backdrop-blur-xl shadow-lg py-2" 
-    : "bg-black/20 backdrop-blur-md py-4"
-  }`;
+  const headerClasses = `fixed top-0 left-0 w-full z-50 transition-all duration-300 py-4
+    ${
+      isScrolled || isMenuOpen
+        ? "bg-black/55 backdrop-blur-xl shadow-lg"
+        : "bg-black/20 backdrop-blur-md"
+    }`;
 
   const linkColorClasses =
     isScrolled || isMenuOpen
@@ -111,39 +107,86 @@ export default function Header() {
         {/* Botão Menu Mobile */}
         <div className="md:hidden">
           <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
+            onClick={() => setIsMenuOpen(true)}
+            aria-label="Abrir menu"
             aria-expanded={isMenuOpen}
             aria-controls="mobile-menu"
             className={`transition-colors ${linkColorClasses}`}
           >
-            {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            <Menu size={28} />
           </button>
         </div>
       </div>
 
-      {/* Menu Mobile */}
-      {isMenuOpen && (
-        <div 
+      {/* MENU MOBILE (Sidebar Premium) */}
+      <div className="md:hidden">
+        {/* Backdrop */}
+        <div
+          className={`fixed inset-0 z-[60] bg-black/70 transition-opacity duration-300
+            ${isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+          onClick={() => setIsMenuOpen(false)}
+        />
+
+        {/* Sidebar */}
+        <aside
           id="mobile-menu"
-          className="md:hidden absolute top-0 left-0 w-full h-screen bg-white flex flex-col items-center justify-center animate-fade-in"
           role="dialog"
           aria-modal="true"
+          className={`fixed top-0 right-0 z-[70] h-dvh w-[82%] max-w-sm
+            bg-gradient-to-b from-black via-black/95 to-zinc-950
+            border-l border-white/10 shadow-2xl
+            transition-transform duration-300 ease-out
+            ${isMenuOpen ? "translate-x-0" : "translate-x-full"}`}
         >
-          <nav className="flex flex-col items-center gap-8">
+          {/* Cabeçalho da Sidebar */}
+          <div className="flex items-center justify-between px-6 pt-6">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
+                <span className="text-white font-bold">V</span>
+              </div>
+              <div className="leading-tight">
+                <p className="text-white font-semibold">Volkano</p>
+                <p className="text-white/60 text-xs">Equipamentos Fitness</p>
+              </div>
+            </div>
+
+            {/* X fechar */}
+            <button
+              onClick={() => setIsMenuOpen(false)}
+              aria-label="Fechar menu"
+              className="h-10 w-10 rounded-2xl bg-white/5 border border-white/10 text-white/90
+                         flex items-center justify-center hover:bg-white/10 transition"
+            >
+              <X size={20} />
+            </button>
+          </div>
+
+          {/* Divisor */}
+          <div className="mx-6 mt-5 h-px bg-white/10" />
+
+          {/* Links */}
+          <nav className="px-4 py-4">
             {navLinks.map((link) => (
               <Link
                 key={link.label}
                 href={link.href}
-                className="text-2xl font-semibold text-gray-800 hover:text-orange-500"
                 onClick={(e) => handleLinkClick(e, link.href)}
+                className="group flex items-center justify-between rounded-2xl px-4 py-4
+                           text-white/90 hover:text-white
+                           hover:bg-white/5 transition"
               >
-                {link.label}
+                <span className="text-lg font-semibold tracking-wide">
+                  {link.label}
+                </span>
+                <ChevronRight
+                  size={18}
+                  className="text-white/30 group-hover:text-orange-400 group-hover:translate-x-0.5 transition"
+                />
               </Link>
             ))}
           </nav>
-        </div>
-      )}
+        </aside>
+      </div>
     </header>
   );
 }
