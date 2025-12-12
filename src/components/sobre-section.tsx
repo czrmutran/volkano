@@ -32,14 +32,15 @@ export default function SobreSection() {
         <div className="grid grid-cols-1 items-center gap-20 md:grid-cols-2">
           {/* Texto */}
           <motion.div className="max-w-xl" variants={itemVariants}>
-            <h2 className="font-montserrat font-black uppercase leading-none -tracking-[0.06em]">
-              <span className="block whitespace-nowrap text-5xl text-orange-500 md:text-6xl">
+            <h2 className="font-montserrat font-black uppercase leading-none tracking-tight md:-tracking-[0.06em]">
+              <span className="block text-3xl text-orange-500 sm:text-4xl md:text-6xl md:whitespace-nowrap">
                 Qualidade Volkano
               </span>
-              <span className="block whitespace-nowrap text-4xl text-white md:text-5xl">
+              <span className="mt-1 block text-2xl text-white sm:text-3xl md:text-5xl md:whitespace-nowrap">
                 Excelência para todos
               </span>
             </h2>
+
             <p className="mt-8 text-lg leading-relaxed text-white/80">
               Acreditamos que a excelência{" "}
               <strong className="text-white">não é privilégio da elite</strong>.
