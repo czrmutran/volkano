@@ -3,28 +3,29 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Instagram, MessageCircle, Youtube } from "lucide-react";
+import { INSTAGRAM_LINK, WHATSAPP_LINK, YOUTUBE_LINK } from "./constants";
 
 const navLinks = [
-  { href: "#inicio", label: "Início" },
+  { href: "#home", label: "Início" },
   { href: "#equipamentos", label: "Equipamentos" },
   { href: "#sobre", label: "Sobre nós" },
-  { href: "#contato", label: "Contato" },
+  { href: "#download", label: "Contato" },
   { href: "/blog", label: "Blog" },
 ];
 
 const socialLinks = [
   {
-    href: "https://instagram.com",
+    href: INSTAGRAM_LINK,
     label: "Instagram",
     icon: Instagram,
   },
   {
-    href: "https://wa.me/555530240126",
+    href: WHATSAPP_LINK,
     label: "WhatsApp",
     icon: MessageCircle,
   },
   {
-    href: "https://youtube.com",
+    href: YOUTUBE_LINK,
     label: "YouTube",
     icon: Youtube,
   },
@@ -37,7 +38,26 @@ export default function FooterSection() {
   ) => {
     if (href.startsWith("#")) {
       e.preventDefault();
-      document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
+      if (href === "#home") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else if (href === "#equipamentos") {
+        const element = document.querySelector(href);
+        if (element) {
+          const headerOffset = 1;
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+          });
+        }
+      } else {
+        document.querySelector(href)?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
     }
   };
 
@@ -51,7 +71,11 @@ export default function FooterSection() {
         <div className="grid gap-12 md:grid-cols-3 md:gap-8">
           {/* Coluna 1: Logo + Endereço */}
           <div className="flex flex-col items-center text-center md:items-start md:text-left">
-            <div className="relative mb-6 h-12 w-48">
+            <Link
+              href="#home"
+              onClick={(e) => handleLinkClick(e, "#home")}
+              className="relative mb-6 h-12 w-48 block"
+            >
               <Image
                 src="/logo_header.webp"
                 alt="Volkano"
@@ -59,7 +83,7 @@ export default function FooterSection() {
                 className="object-contain"
                 quality={100}
               />
-            </div>
+            </Link>
 
             <p className="text-sm text-white/70 leading-relaxed">
               BR 285 – esquina – R. Siqueira Couto <br />

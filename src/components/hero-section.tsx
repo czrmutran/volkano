@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function HeroSection() {
   return (
-    <section className="relative mt-20 h-[calc(100vh-1px)] w-full">
+    <section className="relative mt-20 h-[calc(100vh-1px)] w-full" id="home">
       {/* Mobile */}
       <Image
         src="/banner_principal_mobile.webp"

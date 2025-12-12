@@ -6,10 +6,10 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
-  { href: "#inicio", label: "Início" },
+  { href: "#home", label: "Início" },
   { href: "#equipamentos", label: "Equipamentos" },
   { href: "#sobre", label: "Sobre nós" },
-  { href: "#contato", label: "Contato" },
+  { href: "#download", label: "Contato" },
   { href: "#blog", label: "Blog" },
 ];
 
@@ -42,7 +42,26 @@ export default function Header() {
   ) => {
     if (href.startsWith("#")) {
       e.preventDefault();
-      document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
+      if (href === "#home") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else if (href === "#equipamentos") {
+        const element = document.querySelector(href);
+        if (element) {
+          const headerOffset = 1;
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+          });
+        }
+      } else {
+        document.querySelector(href)?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
     }
     // Fecha o menu mobile após o clique
     setIsMenuOpen(false);
@@ -64,7 +83,7 @@ export default function Header() {
     <header className={headerClasses}>
       <div className="container mx-auto px-4 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/">
+        <Link href="#home" onClick={(e) => handleLinkClick(e, "#home")}>
           <Image
             src="/logo_header.webp"
             alt="Logo da Volkano"

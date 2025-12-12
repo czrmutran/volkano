@@ -29,7 +29,7 @@ export default function SobreSection() {
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
       >
-        <div className="grid grid-cols-1 items-center gap-20 md:grid-cols-2">
+        <div className="grid grid-cols-1 items-center gap-16 md:grid-cols-2 md:gap-24 lg:gap-32">
           {/* Texto */}
           <motion.div className="max-w-xl" variants={itemVariants}>
             <h2 className="font-montserrat font-black uppercase leading-none tracking-tight md:-tracking-[0.06em]">
@@ -70,7 +70,7 @@ export default function SobreSection() {
 
           {/* Vídeo */}
           <motion.div
-            className="relative overflow-hidden rounded-xl border border-white/10 shadow-2xl shadow-black/60"
+            className="relative overflow-hidden rounded-xl border border-white/10 shadow-2xl shadow-black/60 md:w-11/12 md:ml-auto"
             variants={itemVariants}
           >
             <div className="aspect-video">
