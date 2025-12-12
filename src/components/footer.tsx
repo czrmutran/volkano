@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Instagram, MessageCircle, Youtube } from "lucide-react";
-import { INSTAGRAM_LINK, WHATSAPP_LINK, YOUTUBE_LINK } from "./constants";
+import { Instagram, MessageCircle, Youtube, Facebook } from "lucide-react";
+import { INSTAGRAM_LINK, WHATSAPP_LINK, YOUTUBE_LINK, FACEBOOK_LINK } from "./constants";
 
 const navLinks = [
   { href: "#home", label: "Início" },
@@ -28,6 +28,11 @@ const socialLinks = [
     href: YOUTUBE_LINK,
     label: "YouTube",
     icon: Youtube,
+  },
+  {
+    href: FACEBOOK_LINK,
+    label: "Facebook",
+    icon: Facebook,
   },
 ];
 
