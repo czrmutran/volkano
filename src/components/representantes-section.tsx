@@ -6,9 +6,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 const brands = [
   { name: "SkyFit", logo: "/logo-skyfit.webp" },
-  { name: "AD3", logo: "/logo-ad3.webp" },
+  { name: "AD3", logo: "/logo-AD3.webp" },
   { name: "Arena", logo: "/logo-arena.webp" },
-  { name: "PHD", logo: "/logo-phd.webp" },
+  { name: "PHD", logo: "/logo-PHD.webp" },
   { name: "Renato Cariani", logo: "/logo-renato-cariani.webp" },
   { name: "Sardinhas", logo: "/logo-sardinhas.webp" },
 ];
