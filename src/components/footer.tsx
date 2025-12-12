@@ -90,7 +90,7 @@ export default function FooterSection() {
           {/* Coluna 3: Contato + Redes */}
           <div className="flex flex-col items-center text-center md:items-start md:text-left">
             <p className="mb-4 text-sm font-semibold tracking-wider text-white/80 uppercase">
-              Contatos
+              Contato
             </p>
 
             <div className="flex flex-col gap-2 text-sm text-white/70">
