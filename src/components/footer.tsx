@@ -8,7 +8,7 @@ import { INSTAGRAM_LINK, WHATSAPP_LINK, YOUTUBE_LINK, FACEBOOK_LINK } from "./co
 const navLinks = [
   { href: "#home", label: "Início" },
   { href: "#equipamentos", label: "Equipamentos" },
-  { href: "#sobre", label: "Sobre nós" },
+  { href: "/sobre-nos", label: "Sobre nós" },
   { href: "#download", label: "Contato" },
   { href: "/blog", label: "Blog" },
 ];
