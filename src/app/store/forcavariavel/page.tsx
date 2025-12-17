@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import Header from '../../../components/header-section';
 import EquipamentosSection from '../../../components/equipamentos-store';
 import FooterSection from '../../../components/footer';
@@ -13,7 +14,9 @@ export default function ForcaVariavelPage() {
     <>
       <Header />
       <main className="pt-20">
-        <EquipamentosSection categoria="Força Variável" />
+        <Suspense fallback={<div>Carregando...</div>}>
+          <EquipamentosSection categoria="Força Variável" />
+        </Suspense>
       </main>
       <FooterSection />
     </>

@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
-import { Calendar, User, ArrowRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Calendar, User, ArrowRight, X } from "lucide-react";
 
 const posts = [
   {
@@ -29,6 +30,8 @@ const posts = [
 ];
 
 export default function BlogSection() {
+  const [selectedPost, setSelectedPost] = useState<typeof posts[0] | null>(null);
+
   return (
     <section id="blog" className="bg-black text-white pb-24 overflow-hidden">
       {/* Hero Image */}
@@ -111,7 +114,10 @@ export default function BlogSection() {
                 </p>
                 
                 <div className="mt-auto pt-4 border-t border-white/5">
-                  <button className="flex items-center gap-2 text-orange-500 text-sm font-bold hover:gap-3 transition-all">
+                  <button
+                    onClick={() => setSelectedPost(post)}
+                    className="flex items-center gap-2 text-orange-500 text-sm font-bold hover:gap-3 transition-all"
+                  >
                     LER ARTIGO <ArrowRight size={16} />
                   </button>
                 </div>
@@ -120,6 +126,72 @@ export default function BlogSection() {
           ))}
         </div>
       </div>
+
+      {/* Modal de Leitura */}
+      <AnimatePresence>
+        {selectedPost && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
+            onClick={() => setSelectedPost(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl border border-white/10 bg-zinc-900 shadow-2xl"
+            >
+              <button
+                onClick={() => setSelectedPost(null)}
+                className="absolute right-4 top-4 z-10 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-white/20"
+              >
+                <X size={20} />
+              </button>
+
+              <div className="relative h-64 w-full bg-white/5">
+                <div className="absolute inset-0 flex items-center justify-center bg-zinc-800">
+                  <span className="text-6xl font-black text-white/10">V</span>
+                </div>
+              </div>
+
+              <div className="p-8">
+                <div className="mb-6 flex items-center gap-4 text-sm text-white/50">
+                  <span className="rounded-full bg-orange-500/10 px-3 py-1 text-xs font-bold text-orange-500">
+                    {selectedPost.category}
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <Calendar size={14} />
+                    <span>{selectedPost.date}</span>
+                  </div>
+                </div>
+
+                <h2 className="mb-6 text-3xl font-bold text-white">
+                  {selectedPost.title}
+                </h2>
+
+                <div className="space-y-4 text-lg text-white/70">
+                  <p className="font-medium text-white">{selectedPost.excerpt}</p>
+                  <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                    nisi ut aliquip ex ea commodo consequat.
+                  </p>
+                  <p>
+                    Duis aute irure dolor in reprehenderit in voluptate velit esse
+                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+                    cupidatat non proident, sunt in culpa qui officia deserunt
+                    mollit anim id est laborum.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

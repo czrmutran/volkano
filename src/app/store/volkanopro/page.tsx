@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import Header from '../../../components/header-section';
 import EquipamentosSection from '../../../components/equipamentos-store';
 import FooterSection from '../../../components/footer';
@@ -14,7 +15,9 @@ export default function VolkanoProPage() {
       <Header />
       <main className="pt-20">
         {/* Passamos a categoria fixa para filtrar automaticamente */}
-        <EquipamentosSection categoria="Volkano Pro" />
+        <Suspense fallback={<div>Carregando...</div>}>
+          <EquipamentosSection categoria="Volkano Pro" />
+        </Suspense>
       </main>
       <FooterSection />
     </>

@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import Header from '../../components/header-section';
 import EquipamentosSection from '../../components/equipamentos-store';
 import FooterSection from '../../components/footer';
@@ -14,7 +15,9 @@ const SobrePage = () => {
     <>
       <Header />
       <main className="pt-20">
-        <EquipamentosStore />
+        <Suspense fallback={<div>Carregando...</div>}>
+          <EquipamentosStore />
+        </Suspense>
       </main>
       <FooterSection />
     </>
