@@ -7,10 +7,10 @@ import { Calendar, User, ArrowRight } from "lucide-react";
 const posts = [
   {
     id: 1,
-    title: "A importância da biomecânica nos equipamentos",
-    excerpt: "Entenda como a biomecânica correta previne lesões e potencializa os resultados dos seus alunos.",
-    date: "15 Out, 2023",
-    category: "Tecnologia",
+    title: "Como Aumentar a Retenção de Alunos na Sua Academia",
+    excerpt: "Atrair novos alunos para a academia é essencial, mas manter esses alunos motivados e matriculados é o verdadeiro desafio para o crescimento sustentável do seu negócio.",
+    date: "31 Jan, 2025",
+    category: "Gestão",
   },
   {
     id: 2,

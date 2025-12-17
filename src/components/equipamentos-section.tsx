@@ -9,31 +9,31 @@ const equipamentos = [
     desc: "Força e amplitude de movimento.",
     img: "/articulados.webp",
     alt: "Equipamentos articulados",
-    href: "#contato",
+    href: "/store/hammer-e-articulados",
   },
   {
     desc: "Performance para treinos intensos.",
     img: "/infinity.webp",
     alt: "Volkano Infinity",
-    href: "#contato",
+    href: "/store/volkanoinfinity",
   },
   {
     desc: "Robustez e design premium.",
     img: "/black.webp",
     alt: "Volkano Black",
-    href: "#contato",
+    href: "/store/volkanoblack",
   },
   {
     desc: "Versatilidade e acabamento top.",
     img: "/prime.webp",
     alt: "Volkano Prime",
-    href: "#contato",
+    href: "/store/volkanoprime",
   },
   {
     desc: "Linha profissional de alto nível.",
     img: "/volkano-pro.webp",
     alt: "Volkano Pro",
-    href: "#contato",
+    href: "/store/volkanopro",
   },
 ];
 
@@ -130,7 +130,7 @@ export default function EquipamentosSection() {
         </motion.div>
         <div className="mt-14 flex justify-center">
           <a
-            href="#equipamentos"
+            href="/store"
             className="group inline-flex items-center justify-center gap-2 rounded-full border-2 border-orange-500 bg-transparent px-8 py-4 text-sm font-semibold text-orange-500 transition-all duration-300 hover:bg-orange-500 hover:text-black focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-black"
           >
             Mais Equipamentos
