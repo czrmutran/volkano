@@ -2,14 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Instagram, MessageCircle, Youtube, Facebook } from "lucide-react";
 import { INSTAGRAM_LINK, WHATSAPP_LINK, YOUTUBE_LINK, FACEBOOK_LINK } from "./constants";
 
 const navLinks = [
-  { href: "#home", label: "Início" },
+  { href: "/", label: "Início" },
   { href: "#equipamentos", label: "Equipamentos" },
   { href: "/sobre-nos", label: "Sobre nós" },
-  { href: "#download", label: "Contato" },
+  { href: "/contato", label: "Contato" },
   { href: "/blog", label: "Blog" },
 ];
 
@@ -37,15 +38,23 @@ const socialLinks = [
 ];
 
 export default function FooterSection() {
+  const pathname = usePathname();
+
   const handleLinkClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
     href: string,
   ) => {
+    if (href === "/") {
+      if (pathname === "/") {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      return;
+    }
+
     if (href.startsWith("#")) {
       e.preventDefault();
-      if (href === "#home") {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      } else if (href === "#equipamentos") {
+      if (href === "#equipamentos") {
         const element = document.querySelector(href);
         if (element) {
           const headerOffset = 1;
@@ -77,8 +86,8 @@ export default function FooterSection() {
           {/* Coluna 1: Logo + Endereço */}
           <div className="flex flex-col items-center text-center md:items-start md:text-left">
             <Link
-              href="#home"
-              onClick={(e) => handleLinkClick(e, "#home")}
+              href="/"
+              onClick={(e) => handleLinkClick(e, "/")}
               className="relative mb-6 h-12 w-48 block"
             >
               <Image

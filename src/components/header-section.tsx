@@ -3,19 +3,21 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X, ChevronRight } from "lucide-react";
 
 const navLinks = [
-  { href: "#home", label: "Início" },
+  { href: "/", label: "Início" },
   { href: "#equipamentos", label: "Equipamentos" },
   { href: "/sobre-nos", label: "Sobre nós" },
-  { href: "#download", label: "Contato" },
-  { href: "#blog", label: "Blog" },
+  { href: "/contato", label: "Contato" },
+  { href: "/blog", label: "Blog" },
 ];
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -43,32 +45,32 @@ export default function Header() {
     e: React.MouseEvent<HTMLAnchorElement>,
     href: string,
   ) => {
-    if (href.startsWith("#")) {
+    if (href === "/") {
+      if (pathname === "/") {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    } else if (href.startsWith("#")) {
       e.preventDefault();
 
-      if (href === "#home") {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      } else {
-        const el = document.querySelector(href);
-        if (el) {
-          const headerOffset = 80;
-          const elementPosition = el.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.scrollY - headerOffset;
+      const el = document.querySelector(href);
+      if (el) {
+        const headerOffset = 80;
+        const elementPosition = el.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.scrollY - headerOffset;
 
-          window.scrollTo({ top: offsetPosition, behavior: "smooth" });
-        }
+        window.scrollTo({ top: offsetPosition, behavior: "smooth" });
       }
     }
 
     setIsMenuOpen(false);
   };
 
-  const headerClasses = `fixed top-0 left-0 w-full z-50 transition-all duration-300 py-4
-    ${
-      isScrolled || isMenuOpen
-        ? "bg-black/55 backdrop-blur-xl shadow-lg"
-        : "bg-black/20 backdrop-blur-md"
-    }`;
+  const headerClasses = `fixed top-0 left-0 w-full z-50 transition-all duration-300 py-4 ${
+    isScrolled || isMenuOpen
+      ? "bg-black/55 backdrop-blur-xl shadow-lg"
+      : "bg-black/20 backdrop-blur-md"
+  }`;
 
   const linkColorClasses =
     isScrolled || isMenuOpen
@@ -79,7 +81,7 @@ export default function Header() {
     <header className={headerClasses}>
       <div className="container mx-auto px-4 flex items-center justify-between">
         {/* Logo */}
-        <Link href="#home" onClick={(e) => handleLinkClick(e, "#home")}>
+        <Link href="/" onClick={(e) => handleLinkClick(e, "/")}>
           <Image
             src="/logo_header.webp"
             alt="Logo da Volkano"

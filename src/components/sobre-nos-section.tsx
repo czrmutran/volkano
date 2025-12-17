@@ -234,13 +234,13 @@ function Section4() {
 function StatItem({ label, value }: { label: string; value: string }) {
   return (
     <motion.div
-      initial={{ opacity: 0, x: -20 }}
-      whileInView={{ opacity: 1, x: 0 }}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="border-l-4 border-black pl-4"
     >
-      <div className="text-4xl font-black mb-1">{value}</div>
-      <div className="text-sm font-bold uppercase tracking-wide opacity-80">
+      <div className="text-5xl md:text-7xl font-black mb-2 tracking-tighter leading-none">{value}</div>
+      <div className="h-1 w-12 bg-black/20 mb-3 rounded-full" />
+      <div className="text-xs font-bold uppercase tracking-widest opacity-80">
         {label}
       </div>
     </motion.div>
