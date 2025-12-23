@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
-import Header from '../../../components/header-section';
-import EquipamentosSection from '../../../components/equipamentos-store';
-import FooterSection from '../../../components/footer';
+import Header from '../../../../components/header-section';
+import EquipamentosSection from '../../../../components/equipamentos-store';
+import FooterSection from '../../../../components/footer';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

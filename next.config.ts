@@ -4,6 +4,12 @@ import type { NextConfig } from "next";
 const nextConfig = {
   images: {
     qualities: [75, 90, 100],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "qyucqdfspnllcewvgbhj.supabase.co",
+      },
+    ],
   },
 };
 

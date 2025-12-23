@@ -5,43 +5,19 @@ import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { X, Trash2, Filter, CheckCircle } from "lucide-react";
+import { supabase } from "../lib/supabase";
 
 type Equipamento = {
   id: string;
-  nome: string;   // <- título (igual no print)
-  desc: string;   // <- usado pra busca
+  nome: string;
+  codigo: string | null;
+  desc: string;
   img: string;
   alt: string;
   linha: string;
+  imagens: string[];
+  slug: string | null;
 };
-
-const equipamentos: Equipamento[] = [
-  {
-    id: "art-01",
-    nome: "Abdominal Articulado #63",
-    desc: "Força e amplitude de movimento.",
-    img: "/articulados.webp",
-    alt: "Equipamentos articulados",
-    linha: "Hammer e Articulados",
-  },
-  {
-    id: "prm-01",
-    nome: "Abdominal Biarticulado #2108",
-    desc: "Performance para treinos intensos.",
-    img: "/prime.webp",
-    alt: "Volkano Prime",
-    linha: "Volkano Prime",
-  },
-  {
-    id: "prm-02",
-    nome: "Abdominal Biarticulado com Carga #11",
-    desc: "Versatilidade e acabamento top.",
-    img: "/prime.webp",
-    alt: "Volkano Prime",
-    linha: "Volkano Prime",
-  },
-  // ...
-];
 
 const linhas = [
   "Volkano Pro",
@@ -67,6 +43,47 @@ export default function EquipamentosStore({ categoria }: EquipamentosStoreProps)
   const [selecao, setSelecao] = useState<Equipamento[]>([]);
   const [visibleCount, setVisibleCount] = useState(12);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [equipamentos, setEquipamentos] = useState<Equipamento[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch products from Supabase
+  useEffect(() => {
+    async function fetchProdutos() {
+      try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from("produtos")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (error) {
+          console.error("Erro ao buscar produtos:", error);
+          return;
+        }
+
+        if (data) {
+          const formatted: Equipamento[] = data.map((item: any) => ({
+            id: item.id,
+            nome: item.nome,
+            codigo: item.codigo,
+            desc: item.descricao || "",
+            img: item.imagens?.[0] || "/placeholder.webp", // Fallback image
+            alt: item.nome,
+            linha: item.categoria,
+            imagens: item.imagens || [],
+            slug: item.slug || null,
+          }));
+          setEquipamentos(formatted);
+        }
+      } catch (err) {
+        console.error("Erro inesperado:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProdutos();
+  }, []);
 
   // Persistência do carrinho no LocalStorage
   useEffect(() => {
@@ -100,7 +117,7 @@ export default function EquipamentosStore({ categoria }: EquipamentosStoreProps)
     if (sort === "nome_desc") list = [...list].sort((a, b) => b.nome.localeCompare(a.nome));
 
     return list;
-  }, [linhaSelecionada, termoBusca, sort]);
+  }, [linhaSelecionada, termoBusca, sort, equipamentos]);
 
   const handleAdicionar = (equipamento: Equipamento) => {
     if (!selecao.find((item) => item.id === equipamento.id)) setSelecao([...selecao, equipamento]);
@@ -116,13 +133,13 @@ export default function EquipamentosStore({ categoria }: EquipamentosStoreProps)
   // Função para gerar o link correto para cada linha
   const getLinkLinha = (linha: string) => {
     const map: Record<string, string> = {
-      "Volkano Pro": "/store/volkanopro",
-      "Volkano Infinity": "/store/volkanoinfinity",
-      "Volkano Black": "/store/volkanoblack",
-      "Volkano Prime": "/store/volkanoprime",
-      "Hammer e Articulados": "/store/hammer-e-articulados",
-      "Força Variável": "/store/forcavariavel",
-      "Suportes": "/store/suportes",
+      "Volkano Pro": "/store/categoria-produto/volkanopro",
+      "Volkano Infinity": "/store/categoria-produto/volkanoinfinity",
+      "Volkano Black": "/store/categoria-produto/volkanoblack",
+      "Volkano Prime": "/store/categoria-produto/volkanoprime",
+      "Hammer e Articulados": "/store/categoria-produto/hammer-e-articulados",
+      "Força Variável": "/store/categoria-produto/forcavariavel",
+      "Suportes": "/store/categoria-produto/suportes",
     };
 
     return map[linha] || `/store?linha=${encodeURIComponent(linha)}`;
@@ -203,10 +220,6 @@ export default function EquipamentosStore({ categoria }: EquipamentosStoreProps)
             </div>
           </div>
 
-          {/* ORÇAMENTO */}
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm shadow-2xl">
-            {/* ... (código do orçamento permanece o mesmo) ... */}
-          </div>
         </aside>
 
         {/* LISTAGEM */}
@@ -251,57 +264,72 @@ export default function EquipamentosStore({ categoria }: EquipamentosStoreProps)
           </div>
 
           {/* Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-            {displayedItems.map((item) => {
-              const isAdded = selecao.some((s) => s.id === item.id);
+          {loading ? (
+            <div className="flex justify-center py-20">
+              <p className="text-white/50 animate-pulse">Carregando equipamentos...</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+              {displayedItems.map((item) => {
+                const isAdded = selecao.some((s) => s.id === item.id);
 
-              return (
-                <div
-                  key={item.id}
-                  className="group relative flex flex-col overflow-hidden rounded-xl border border-white/10 bg-white/[.02]"
-                >
-                  <div className="relative w-full aspect-[3/4]">
-                    <Image
-                      src={item.img}
-                      alt={item.alt}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      sizes="(max-width: 768px) 50vw, (max-width: 1280px) 25vw, 20vw"
-                      quality={80}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent" />
-                  </div>
+                return (
+                  <div
+                    key={item.id}
+                    className="group relative flex flex-col overflow-hidden rounded-xl border border-white/10 bg-white/[.02]"
+                  >
+                    <Link href={`/produto/${item.slug || encodeURIComponent(item.nome)}`}>
+                      <div className="relative w-full aspect-[3/4] cursor-pointer bg-black/20">
+                        <Image
+                          src={item.img}
+                          alt={item.alt}
+                          fill
+                          className="object-contain p-4 transition-transform duration-500 group-hover:scale-105"
+                          sizes="(max-width: 768px) 50vw, (max-width: 1280px) 25vw, 20vw"
+                          quality={80}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent pointer-events-none" />
+                      </div>
+                    </Link>
 
-                  <div className="p-4 flex flex-col flex-1">
-                    <p className="text-sm font-extrabold text-white/90">
-                      {item.nome}
-                    </p>
-                    <p className="text-xs text-white/50 mt-1 flex-1">
-                      {item.linha}
-                    </p>
-
-                    <button
-                      onClick={() => handleAdicionar(item)}
-                      disabled={isAdded}
-                      className={`mt-4 w-full flex items-center justify-center gap-2 rounded-full px-3 py-2 text-xs font-extrabold transition-colors ${
-                        isAdded
-                          ? "bg-green-600 text-white cursor-default"
-                          : "bg-white/10 text-white/80 hover:bg-orange-500 hover:text-black"
-                      }`}
-                    >
-                      {isAdded ? (
-                        <>
-                          <CheckCircle size={14} /> Adicionado
-                        </>
-                      ) : (
-                        "Adicionar"
+                    <div className="p-4 flex flex-col flex-1">
+                      <Link href={`/produto/${item.slug || encodeURIComponent(item.nome)}`} className="hover:text-orange-500 transition-colors">
+                        <p className="text-sm font-extrabold text-white/90">
+                          {item.nome}
+                        </p>
+                      </Link>
+                      {item.codigo && (
+                        <p className="text-xs text-orange-500 font-bold mt-1">
+                          Cód: {item.codigo}
+                        </p>
                       )}
-                    </button>
+                      <p className="text-xs text-white/50 mt-1 flex-1">
+                        {item.linha}
+                      </p>
+
+                      <button
+                        onClick={() => handleAdicionar(item)}
+                        disabled={isAdded}
+                        className={`mt-4 w-full flex items-center justify-center gap-2 rounded-full px-3 py-2 text-xs font-extrabold transition-colors ${
+                          isAdded
+                            ? "bg-green-600 text-white cursor-default"
+                            : "bg-white/10 text-white/80 hover:bg-orange-500 hover:text-black"
+                        }`}
+                      >
+                        {isAdded ? (
+                          <>
+                            <CheckCircle size={14} /> Adicionado
+                          </>
+                        ) : (
+                          "Adicionar"
+                        )}
+                      </button>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
 
           {/* Load More */}
           {visibleCount < total && (

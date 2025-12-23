@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
 import Header from '../../components/header-section';
-import EquipamentosSection from '../../components/equipamentos-store';
 import FooterSection from '../../components/footer';
 import type { Metadata } from 'next';
 import EquipamentosStore from '../../components/equipamentos-store';
@@ -10,7 +9,7 @@ export const metadata: Metadata = {
   description: 'Descubra a excelência dos equipamentos Volkano: design inovador, performance superior e durabilidade incomparável para elevar seus treinos ao próximo nível.',
 };
 
-const SobrePage = () => {
+const StorePage = () => {
   return (
     <>
       <Header />
@@ -19,9 +18,8 @@ const SobrePage = () => {
           <EquipamentosStore />
         </Suspense>
       </main>
-      <FooterSection />
     </>
   );
 };
 
-export default SobrePage;
+export default StorePage;

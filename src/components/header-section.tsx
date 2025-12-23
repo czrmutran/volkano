@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, ChevronRight } from "lucide-react";
+import { Menu, X, ChevronRight, ShoppingCart } from "lucide-react";
 
 const navLinks = [
   { href: "/", label: "Início" },
@@ -12,6 +12,7 @@ const navLinks = [
   { href: "/sobre-nos", label: "Sobre nós" },
   { href: "/contato", label: "Contato" },
   { href: "/blog", label: "Blog" },
+  { href: "/request-quote", label: "Carrinho" },
 ];
 
 export default function Header() {
@@ -98,9 +99,14 @@ export default function Header() {
               onClick={(e) => handleLinkClick(e, link.href)}
               key={link.label}
               href={link.href}
+              aria-label={link.href === "/request-quote" ? "Carrinho" : undefined}
               className="group relative font-medium text-white transition-colors duration-300 hover:text-red-500"
             >
-              {link.label}
+              {link.href === "/request-quote" ? (
+                <ShoppingCart size={18} className="inline-block" />
+              ) : (
+                link.label
+              )}
               <span className="absolute bottom-[-2px] left-0 h-0.5 w-full origin-left scale-x-0 transform bg-red-500 transition-transform duration-300 group-hover:scale-x-100" />
             </Link>
           ))}
@@ -173,12 +179,17 @@ export default function Header() {
                 key={link.label}
                 href={link.href}
                 onClick={(e) => handleLinkClick(e, link.href)}
+                aria-label={link.href === "/request-quote" ? "Carrinho" : undefined}
                 className="group flex items-center justify-between rounded-2xl px-4 py-4
                            text-white/90 hover:text-white
                            hover:bg-white/5 transition"
               >
-                <span className="text-lg font-semibold tracking-wide">
-                  {link.label}
+                <span className="text-lg font-semibold tracking-wide flex items-center gap-2">
+                  {link.href === "/request-quote" ? (
+                    <ShoppingCart size={20} />
+                  ) : (
+                    link.label
+                  )}
                 </span>
                 <ChevronRight
                   size={18}
