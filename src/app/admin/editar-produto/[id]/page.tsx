@@ -9,6 +9,9 @@ import { Upload, X, Loader2, ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+// Força a renderização dinâmica para evitar 404 em rotas não geradas estaticamente
+export const dynamic = "force-dynamic";
+
 const CATEGORIAS = [
   "Volkano Pro",
   "Volkano Infinity",
@@ -22,7 +25,7 @@ const CATEGORIAS = [
 export default function EditarProdutoPage() {
   const router = useRouter();
   const params = useParams();
-  const id = params.id as string;
+  const id = params?.id as string;
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -41,6 +44,8 @@ export default function EditarProdutoPage() {
 
   useEffect(() => {
     async function fetchProduto() {
+      if (!id) return;
+
       try {
         const { data, error } = await supabase
           .from("produtos")
@@ -69,7 +74,7 @@ export default function EditarProdutoPage() {
       }
     }
 
-    if (id) fetchProduto();
+    fetchProduto();
   }, [id, router]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -47,16 +47,31 @@ export default function ProdutoDetalhePage() {
         // 2. Se não encontrar, tentar pelo nome (case insensitive)
         // Isso mantém compatibilidade com URLs antigas ou sem slug
         if (!prodData) {
-           const { data: nameData, error: nameError } = await supabase
+           let { data: nameData, error: nameError } = await supabase
             .from("produtos")
             .select("*")
             .ilike("nome", produtoParam)
             .single();
             
+            // 3. Fallback: Se tiver hifens, tenta substituir por espaços (ex: "abdominal-com-carga" -> "abdominal com carga")
+            if (!nameData && produtoParam.includes("-")) {
+              const nameWithSpaces = produtoParam.replace(/-/g, " ");
+              const { data: spaceData } = await supabase
+                .from("produtos")
+                .select("*")
+                .ilike("nome", nameWithSpaces)
+                .maybeSingle();
+                
+              if (spaceData) {
+                nameData = spaceData;
+                nameError = null;
+              }
+            }
+
             prodData = nameData;
-            // Se achou por nome, limpamos o erro anterior
+            // Se achou por nome (ou fallback), limpamos o erro anterior
             if (nameData) prodError = null;
-            else prodError = nameError;
+            else if (!nameError) prodError = { message: "Produto não encontrado", details: "", hint: "", code: "404", name: "NotFoundError" };
         }
 
         if (prodError || !prodData) {

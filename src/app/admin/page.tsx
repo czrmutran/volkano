@@ -8,6 +8,8 @@ import Header from "../../components/header-section";
 import FooterSection from "../../components/footer";
 import { Plus, Pencil, Trash2, Search, Loader2, FileText, LayoutGrid } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 type Produto = {
   id: string;
   nome: string;

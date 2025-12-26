@@ -8,6 +8,8 @@ import FooterSection from "../../../components/footer";
 import { Upload, X, Loader2 } from "lucide-react";
 import Image from "next/image";
 
+export const dynamic = "force-dynamic";
+
 const CATEGORIAS = [
   "Volkano Pro",
   "Volkano Infinity",
