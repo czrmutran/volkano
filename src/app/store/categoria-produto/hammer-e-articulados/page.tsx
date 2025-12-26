@@ -1,12 +1,12 @@
 import { Suspense } from 'react';
 import Header from '../../../../components/header-section';
-import EquipamentosSection from '../../../../components/equipamentos-store';
-import FooterSection from '../../../../components/footer';
+import EquipamentosStore from '../../../../components/equipamentos-store';
+import Footer from '../../../../components/footer';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Hammer e Articulados - Força e Biomecânica',
-  description: 'Linha Hammer e Articulados: Equipamentos robustos com foco em força e biomecânica avançada.',
+  title: 'Hammer e Articulados - Volkano',
+  description: 'Linha Hammer e Articulados: Treino de força pura.',
 };
 
 export default function HammerArticuladosPage() {
@@ -15,10 +15,9 @@ export default function HammerArticuladosPage() {
       <Header />
       <main className="pt-20">
         <Suspense fallback={<div>Carregando...</div>}>
-          <EquipamentosSection categoria="Hammer e Articulados" />
+          <EquipamentosStore categoria="Hammer e Articulados" />
         </Suspense>
       </main>
-      <FooterSection />
     </>
   );
 }

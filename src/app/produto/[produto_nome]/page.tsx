@@ -8,29 +8,18 @@ import { supabase } from "../../../lib/supabase";
 import Header from "../../../components/header-section";
 import FooterSection from "../../../components/footer";
 import { CheckCircle, ChevronRight, ArrowLeft } from "lucide-react";
-
-type Equipamento = {
-  id: string;
-  nome: string;
-  codigo: string | null;
-  desc: string;
-  img: string;
-  alt: string;
-  linha: string;
-  imagens: string[];
-  video_url: string | null;
-  slug: string | null;
-};
+import { useCart, CartItem } from "../../../context/cart-context";
 
 export default function ProdutoDetalhePage() {
   const { produto_nome } = useParams();
   const router = useRouter();
   
-  const [produto, setProduto] = useState<Equipamento | null>(null);
-  const [relacionados, setRelacionados] = useState<Equipamento[]>([]);
+  const [produto, setProduto] = useState<CartItem | null>(null);
+  const [relacionados, setRelacionados] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [mainImage, setMainImage] = useState("");
-  const [isAdded, setIsAdded] = useState(false);
+  
+  const { addToCart, isInCart } = useCart();
 
   // Decodifica o nome da URL para buscar no banco
   // Ex: "Abdominal%20Articulado" -> "Abdominal Articulado"
@@ -68,7 +57,7 @@ export default function ProdutoDetalhePage() {
           return;
         }
 
-        const currentProd: Equipamento = {
+        const currentProd: CartItem = {
           id: prodData.id,
           nome: prodData.nome,
           codigo: prodData.codigo,
@@ -84,13 +73,6 @@ export default function ProdutoDetalhePage() {
         setProduto(currentProd);
         setMainImage(currentProd.img);
 
-        // Checar se já está no carrinho
-        const saved = localStorage.getItem("volkano_orcamento");
-        if (saved) {
-          const cart = JSON.parse(saved);
-          setIsAdded(cart.some((item: Equipamento) => item.id === currentProd.id));
-        }
-
         // 2. Buscar relacionados (mesma categoria, excluindo o atual)
         const { data: relData } = await supabase
           .from("produtos")
@@ -100,7 +82,7 @@ export default function ProdutoDetalhePage() {
           .limit(4);
 
         if (relData) {
-          const relFormatted = relData.map((item: any) => ({
+          const relFormatted: CartItem[] = relData.map((item: any) => ({
             id: item.id,
             nome: item.nome,
             codigo: item.codigo,
@@ -129,15 +111,7 @@ export default function ProdutoDetalhePage() {
 
   const handleAdicionar = () => {
     if (!produto) return;
-
-    const saved = localStorage.getItem("volkano_orcamento");
-    let cart: Equipamento[] = saved ? JSON.parse(saved) : [];
-
-    if (!cart.find((item) => item.id === produto.id)) {
-      cart.push(produto);
-      localStorage.setItem("volkano_orcamento", JSON.stringify(cart));
-      setIsAdded(true);
-    }
+    addToCart(produto);
   };
 
   // Função para extrair ID do vídeo do YouTube
@@ -148,6 +122,7 @@ export default function ProdutoDetalhePage() {
   };
 
   const youtubeId = produto?.video_url ? getYoutubeId(produto.video_url) : null;
+  const isAdded = produto ? isInCart(produto.id) : false;
 
   if (loading) {
     return (

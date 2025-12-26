@@ -1,12 +1,12 @@
 import { Suspense } from 'react';
 import Header from '../../../../components/header-section';
-import EquipamentosSection from '../../../../components/equipamentos-store';
-import FooterSection from '../../../../components/footer';
+import EquipamentosStore from '../../../../components/equipamentos-store';
+import Footer from '../../../../components/footer';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Volkano Infinity - Performance Infinita',
-  description: 'Linha Volkano Infinity: Biomecânica avançada para treinos intensos.',
+  title: 'Volkano Infinity - Equipamentos',
+  description: 'Linha Volkano Infinity: Design futurista e biomecânica perfeita.',
 };
 
 export default function VolkanoInfinityPage() {
@@ -15,10 +15,9 @@ export default function VolkanoInfinityPage() {
       <Header />
       <main className="pt-20">
         <Suspense fallback={<div>Carregando...</div>}>
-          <EquipamentosSection categoria="Volkano Infinity" />
+          <EquipamentosStore categoria="Volkano Infinity" />
         </Suspense>
       </main>
-      <FooterSection />
     </>
   );
 }

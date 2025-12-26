@@ -1,12 +1,12 @@
 import { Suspense } from 'react';
 import Header from '../../../../components/header-section';
-import EquipamentosSection from '../../../../components/equipamentos-store';
-import FooterSection from '../../../../components/footer';
+import EquipamentosStore from '../../../../components/equipamentos-store';
+import Footer from '../../../../components/footer';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Volkano Pro - Equipamentos Profissionais',
-  description: 'Linha Volkano Pro: A elite dos equipamentos de musculação para alta performance.',
+  title: 'Volkano Pro - Equipamentos',
+  description: 'Linha Volkano Pro: Alta performance e durabilidade.',
 };
 
 export default function VolkanoProPage() {
@@ -14,12 +14,10 @@ export default function VolkanoProPage() {
     <>
       <Header />
       <main className="pt-20">
-        {/* Passamos a categoria fixa para filtrar automaticamente */}
         <Suspense fallback={<div>Carregando...</div>}>
-          <EquipamentosSection categoria="Volkano Pro" />
+          <EquipamentosStore categoria="Volkano Pro" />
         </Suspense>
       </main>
-      <FooterSection />
     </>
   );
 }

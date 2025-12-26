@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next"
 import { Inter, Montserrat } from "next/font/google"
 import Footer from "../components/footer"
 import SiteBackground from "../components/sitebackground"
+import { CartProvider } from "../context/cart-context"
 import "./globals.css"
 
 const inter = Inter({
@@ -42,10 +43,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           ${montserrat.variable}
         `}
       >
-        <SiteBackground />
+        <CartProvider>
+          <SiteBackground />
 
-        <main className="flex-1">{children}</main>
-        <Footer />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </CartProvider>
       </body>
     </html>
   )

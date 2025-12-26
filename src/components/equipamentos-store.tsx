@@ -4,20 +4,9 @@ import { useMemo, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { X, Trash2, Filter, CheckCircle } from "lucide-react";
+import { Filter, CheckCircle } from "lucide-react";
 import { supabase } from "../lib/supabase";
-
-type Equipamento = {
-  id: string;
-  nome: string;
-  codigo: string | null;
-  desc: string;
-  img: string;
-  alt: string;
-  linha: string;
-  imagens: string[];
-  slug: string | null;
-};
+import { useCart, CartItem } from "../context/cart-context";
 
 const linhas = [
   "Volkano Pro",
@@ -40,11 +29,12 @@ export default function EquipamentosStore({ categoria }: EquipamentosStoreProps)
   const linhaSelecionada = categoria || searchParams.get("linha") || "Todos";
   const [termoBusca, setTermoBusca] = useState("");
   const [sort, setSort] = useState<SortKey>("padrao");
-  const [selecao, setSelecao] = useState<Equipamento[]>([]);
   const [visibleCount, setVisibleCount] = useState(12);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
-  const [equipamentos, setEquipamentos] = useState<Equipamento[]>([]);
+  const [equipamentos, setEquipamentos] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const { addToCart, isInCart } = useCart();
 
   // Fetch products from Supabase
   useEffect(() => {
@@ -62,7 +52,7 @@ export default function EquipamentosStore({ categoria }: EquipamentosStoreProps)
         }
 
         if (data) {
-          const formatted: Equipamento[] = data.map((item: any) => ({
+          const formatted: CartItem[] = data.map((item: any) => ({
             id: item.id,
             nome: item.nome,
             codigo: item.codigo,
@@ -72,6 +62,7 @@ export default function EquipamentosStore({ categoria }: EquipamentosStoreProps)
             linha: item.categoria,
             imagens: item.imagens || [],
             slug: item.slug || null,
+            video_url: item.video_url || null,
           }));
           setEquipamentos(formatted);
         }
@@ -84,22 +75,6 @@ export default function EquipamentosStore({ categoria }: EquipamentosStoreProps)
 
     fetchProdutos();
   }, []);
-
-  // Persistência do carrinho no LocalStorage
-  useEffect(() => {
-    const saved = localStorage.getItem("volkano_orcamento");
-    if (saved) {
-      try {
-        setSelecao(JSON.parse(saved));
-      } catch (e) {
-        console.error("Erro ao carregar orçamento", e);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("volkano_orcamento", JSON.stringify(selecao));
-  }, [selecao]);
 
   // Resetar paginação ao filtrar
   useEffect(() => {
@@ -119,12 +94,8 @@ export default function EquipamentosStore({ categoria }: EquipamentosStoreProps)
     return list;
   }, [linhaSelecionada, termoBusca, sort, equipamentos]);
 
-  const handleAdicionar = (equipamento: Equipamento) => {
-    if (!selecao.find((item) => item.id === equipamento.id)) setSelecao([...selecao, equipamento]);
-  };
-
-  const handleRemover = (equipamentoId: string) => {
-    setSelecao(selecao.filter((item) => item.id !== equipamentoId));
+  const handleAdicionar = (equipamento: CartItem) => {
+    addToCart(equipamento);
   };
 
   const total = equipamentosFiltrados.length;
@@ -271,7 +242,7 @@ export default function EquipamentosStore({ categoria }: EquipamentosStoreProps)
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
               {displayedItems.map((item) => {
-                const isAdded = selecao.some((s) => s.id === item.id);
+                const isAdded = isInCart(item.id);
 
                 return (
                   <div

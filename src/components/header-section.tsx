@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, ChevronRight, ShoppingCart } from "lucide-react";
+import { useCart } from "../context/cart-context";
 
 const navLinks = [
   { href: "/", label: "Início" },
@@ -19,6 +20,7 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { cartCount } = useCart();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -103,7 +105,14 @@ export default function Header() {
               className="group relative font-medium text-white transition-colors duration-300 hover:text-red-500"
             >
               {link.href === "/request-quote" ? (
-                <ShoppingCart size={18} className="inline-block" />
+                <div className="relative">
+                  <ShoppingCart size={18} className="inline-block" />
+                  {cartCount > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-orange-500 text-black text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">
+                      {cartCount}
+                    </span>
+                  )}
+                </div>
               ) : (
                 link.label
               )}
@@ -186,7 +195,15 @@ export default function Header() {
               >
                 <span className="text-lg font-semibold tracking-wide flex items-center gap-2">
                   {link.href === "/request-quote" ? (
-                    <ShoppingCart size={20} />
+                    <div className="relative flex items-center gap-2">
+                      <ShoppingCart size={20} />
+                      <span>Carrinho</span>
+                      {cartCount > 0 && (
+                        <span className="bg-orange-500 text-black text-xs font-bold px-2 py-0.5 rounded-full">
+                          {cartCount}
+                        </span>
+                      )}
+                    </div>
                   ) : (
                     link.label
                   )}
