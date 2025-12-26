@@ -7,11 +7,14 @@ import Link from "next/link";
 import { supabase } from "../../../lib/supabase";
 import Header from "../../../components/header-section";
 import FooterSection from "../../../components/footer";
-import { CheckCircle, ChevronRight, ArrowLeft } from "lucide-react";
+import { CheckCircle, ChevronRight, ArrowLeft, Loader2 } from "lucide-react";
 import { useCart, CartItem } from "../../../context/cart-context";
 
+// Força a renderização dinâmica para evitar 404 em rotas não geradas estaticamente
+export const dynamic = "force-dynamic";
+
 export default function ProdutoDetalhePage() {
-  const { produto_nome } = useParams();
+  const params = useParams();
   const router = useRouter();
   
   const [produto, setProduto] = useState<CartItem | null>(null);
@@ -21,25 +24,28 @@ export default function ProdutoDetalhePage() {
   
   const { addToCart, isInCart } = useCart();
 
-  // Decodifica o nome da URL para buscar no banco
-  // Ex: "Abdominal%20Articulado" -> "Abdominal Articulado"
-  const produtoParam = decodeURIComponent(produto_nome as string);
+  // Tratamento seguro do parâmetro
+  const produto_nome = params?.produto_nome;
+  const produtoParam = typeof produto_nome === 'string' 
+    ? decodeURIComponent(produto_nome) 
+    : null;
 
   useEffect(() => {
     async function fetchProduto() {
+      if (!produtoParam) return;
+
       try {
         setLoading(true);
         
-        // Buscar por slug OU nome
-        // Como o supabase não tem "OR" direto simples em queries combinadas assim sem usar .or()
-        // Vamos tentar buscar por slug primeiro.
+        // 1. Tentar buscar pelo slug exato
         let { data: prodData, error: prodError } = await supabase
           .from("produtos")
           .select("*")
           .eq("slug", produtoParam)
           .single();
 
-        // Se não achar por slug, tenta por nome (para retrocompatibilidade)
+        // 2. Se não encontrar, tentar pelo nome (case insensitive)
+        // Isso mantém compatibilidade com URLs antigas ou sem slug
         if (!prodData) {
            const { data: nameData, error: nameError } = await supabase
             .from("produtos")
@@ -48,11 +54,13 @@ export default function ProdutoDetalhePage() {
             .single();
             
             prodData = nameData;
-            prodError = nameError;
+            // Se achou por nome, limpamos o erro anterior
+            if (nameData) prodError = null;
+            else prodError = nameError;
         }
 
         if (prodError || !prodData) {
-          console.error("Produto não encontrado", prodError);
+          console.error("Produto não encontrado:", produtoParam, prodError);
           setLoading(false);
           return;
         }
@@ -73,7 +81,7 @@ export default function ProdutoDetalhePage() {
         setProduto(currentProd);
         setMainImage(currentProd.img);
 
-        // 2. Buscar relacionados (mesma categoria, excluindo o atual)
+        // 3. Buscar relacionados
         const { data: relData } = await supabase
           .from("produtos")
           .select("*")
@@ -98,15 +106,13 @@ export default function ProdutoDetalhePage() {
         }
 
       } catch (err) {
-        console.error(err);
+        console.error("Erro inesperado:", err);
       } finally {
         setLoading(false);
       }
     }
 
-    if (produtoParam) {
-      fetchProduto();
-    }
+    fetchProduto();
   }, [produtoParam]);
 
   const handleAdicionar = () => {
@@ -114,7 +120,6 @@ export default function ProdutoDetalhePage() {
     addToCart(produto);
   };
 
-  // Função para extrair ID do vídeo do YouTube
   const getYoutubeId = (url: string) => {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = url.match(regExp);
@@ -129,7 +134,7 @@ export default function ProdutoDetalhePage() {
       <>
         <Header />
         <div className="min-h-screen bg-black pt-32 flex justify-center">
-          <p className="text-white/50 animate-pulse">Carregando detalhes...</p>
+          <Loader2 className="animate-spin text-orange-500" size={40} />
         </div>
       </>
     );
