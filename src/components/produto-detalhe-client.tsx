@@ -7,6 +7,7 @@ import { CheckCircle, ArrowLeft } from "lucide-react";
 import { useCart, CartItem } from "../context/cart-context";
 import Header from "./header-section";
 
+
 interface ProdutoDetalheClientProps {
   produto: CartItem;
   relacionados: CartItem[];

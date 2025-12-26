@@ -116,6 +116,20 @@ export default function EquipamentosStore({ categoria }: EquipamentosStoreProps)
     return map[linha] || `/store?linha=${encodeURIComponent(linha)}`;
   };
 
+  const getProductLink = (item: CartItem) => {
+    if (item.slug) return `/produto/${item.slug}`;
+    
+    // Gerar slug amigável a partir do nome se não houver slug definido
+    const generatedSlug = item.nome
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "") // Remove acentos
+      .replace(/[^\w\s-]/g, "") // Remove caracteres especiais
+      .replace(/\s+/g, "-"); // Substitui espaços por hífens
+      
+    return `/produto/${generatedSlug}`;
+  };
+
   return (
   <section className="bg-black/80 py-16 sm:py-20 lg:py-24 overflow-hidden" id="equipamentos">
     <div className="container mx-auto px-4">
@@ -249,7 +263,7 @@ export default function EquipamentosStore({ categoria }: EquipamentosStoreProps)
                     key={item.id}
                     className="group relative flex flex-col overflow-hidden rounded-xl border border-white/10 bg-white/[.02]"
                   >
-                    <Link href={`/produto/${item.slug || encodeURIComponent(item.nome)}`}>
+                    <Link href={getProductLink(item)}>
                       <div className="relative w-full aspect-[3/4] cursor-pointer bg-black/20">
                         <Image
                           src={item.img}
@@ -264,7 +278,7 @@ export default function EquipamentosStore({ categoria }: EquipamentosStoreProps)
                     </Link>
 
                     <div className="p-4 flex flex-col flex-1">
-                      <Link href={`/produto/${item.slug || encodeURIComponent(item.nome)}`} className="hover:text-orange-500 transition-colors">
+                      <Link href={getProductLink(item)} className="hover:text-orange-500 transition-colors">
                         <p className="text-sm font-extrabold text-white/90">
                           {item.nome}
                         </p>

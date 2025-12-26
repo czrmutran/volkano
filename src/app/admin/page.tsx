@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { supabase } from "../../lib/supabase";
+// import { supabase } from "../../lib/supabase"; // Removed client-side supabase
+import { getOrcamentos, getProdutos, deleteProduto } from "./actions"; // Import server actions
 import Header from "../../components/header-section";
 import FooterSection from "../../components/footer";
 import { Plus, Pencil, Trash2, Search, Loader2, FileText, LayoutGrid } from "lucide-react";
+import { supabase } from "@/src/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +26,9 @@ type Orcamento = {
   email: string | null;
   telefone: string | null;
   cidade: string | null;
+  documento: string | null;
+  tipo_documento: string | null;
+  canal_contato: string | null;
   itens: any;
   created_at: string;
 };
@@ -222,6 +227,16 @@ export default function AdminPage() {
                           <div className="text-sm text-white/60 space-y-1">
                             <p>{orc.email || "Sem e-mail"}</p>
                             <p>{orc.telefone || "Sem telefone"} • {orc.cidade || "Cidade não informada"}</p>
+                            {orc.documento && (
+                              <p className="text-white/40 text-xs">
+                                {orc.tipo_documento === 'cpf' ? 'CPF' : 'CNPJ'}: {orc.documento}
+                              </p>
+                            )}
+                            {orc.canal_contato && (
+                              <p className="text-orange-500/80 text-xs font-semibold">
+                                Preferência: {orc.canal_contato === 'whatsapp' ? 'WhatsApp' : 'E-mail'}
+                              </p>
+                            )}
                           </div>
                         </div>
                         <div className="text-right text-sm text-white/40">

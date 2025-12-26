@@ -192,7 +192,7 @@ export default function EditarProdutoPage() {
               <input
                 type="text"
                 value={formData.slug}
-                onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
                 className="w-full rounded-lg bg-black/40 border border-white/10 px-4 py-3 focus:border-orange-500 focus:outline-none transition font-mono text-sm text-orange-500"
                 placeholder="ex: supino-reto-profissional"
               />
@@ -311,7 +311,6 @@ export default function EditarProdutoPage() {
           </form>
         </div>
       </main>
-      <FooterSection />
     </>
   );
 }
