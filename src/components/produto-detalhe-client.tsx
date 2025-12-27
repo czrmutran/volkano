@@ -16,6 +16,15 @@ interface ProdutoDetalheClientProps {
 export default function ProdutoDetalheClient({ produto, relacionados }: ProdutoDetalheClientProps) {
   const [mainImage, setMainImage] = useState(produto.img);
   const { addToCart, isInCart } = useCart();
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [transformOrigin, setTransformOrigin] = useState("50% 50%");
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - left) / width) * 100;
+    const y = ((e.clientY - top) / height) * 100;
+    setTransformOrigin(`${x}% ${y}%`);
+  };
 
   const handleAdicionar = () => {
     addToCart(produto);
@@ -48,12 +57,18 @@ export default function ProdutoDetalheClient({ produto, relacionados }: ProdutoD
           <div className="grid grid-cols-1 lg:grid-cols-[35%_1fr] gap-8 lg:gap-16 items-start">
             {/* Galeria de Imagens */}
             <div className="space-y-3 lg:sticky lg:top-24">
-              <div className="relative w-full aspect-square rounded-xl overflow-hidden border border-white/10 bg-white/5">
+              <div 
+                className="relative w-full aspect-square rounded-xl overflow-hidden border border-white/10 bg-white/5 cursor-zoom-in group"
+                onMouseEnter={() => setIsZoomed(true)}
+                onMouseLeave={() => setIsZoomed(false)}
+                onMouseMove={handleMouseMove}
+              >
                 <Image
                   src={mainImage}
                   alt={produto.alt}
                   fill
-                  className="object-contain p-4"
+                  className={`object-contain p-4 transition-transform duration-200 ease-out ${isZoomed ? 'scale-[2]' : 'scale-100'}`}
+                  style={{ transformOrigin: isZoomed ? transformOrigin : "center" }}
                   priority
                 />
               </div>
@@ -170,7 +185,7 @@ export default function ProdutoDetalheClient({ produto, relacionados }: ProdutoD
                         src={rel.img}
                         alt={rel.alt}
                         fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        className="object-contain p-4 transition-transform duration-500 group-hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
                     </div>

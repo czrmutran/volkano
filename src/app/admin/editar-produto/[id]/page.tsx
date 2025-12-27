@@ -41,6 +41,7 @@ export default function EditarProdutoPage() {
   });
   
   const [imagens, setImagens] = useState<string[]>([]);
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     async function fetchProduto() {
@@ -77,14 +78,13 @@ export default function EditarProdutoPage() {
     fetchProduto();
   }, [id, router]);
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || e.target.files.length === 0) return;
+  const processFiles = async (files: File[]) => {
+    if (files.length === 0) return;
 
     setUploading(true);
-    const newFiles = Array.from(e.target.files);
     const uploadedUrls: string[] = [];
 
-    for (const file of newFiles) {
+    for (const file of files) {
       const fileExt = file.name.split('.').pop();
       const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
       const filePath = `produtos/${fileName}`;
@@ -111,6 +111,31 @@ export default function EditarProdutoPage() {
 
     setImagens((prev) => [...prev, ...uploadedUrls]);
     setUploading(false);
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    const newFiles = Array.from(e.target.files);
+    await processFiles(newFiles);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      await processFiles(Array.from(e.dataTransfer.files));
+    }
   };
 
   const removeImage = (index: number) => {
@@ -270,13 +295,27 @@ export default function EditarProdutoPage() {
                   </div>
                 ))}
                 
-                <label className={`w-24 h-24 rounded-lg border-2 border-dashed border-white/20 flex flex-col items-center justify-center cursor-pointer hover:border-orange-500 hover:text-orange-500 transition ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                <label 
+                  className={`w-24 h-24 rounded-lg border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition relative overflow-hidden ${
+                    uploading ? 'opacity-50 pointer-events-none' : ''
+                  } ${
+                    isDragging 
+                      ? 'border-orange-500 bg-orange-500/10 scale-105' 
+                      : 'border-white/20 hover:border-orange-500 hover:text-orange-500'
+                  }`}
+                  onDragEnter={(e) => setIsDragging(true)}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                >
                   {uploading ? (
                     <Loader2 className="animate-spin" size={24} />
                   ) : (
                     <>
-                      <Upload size={24} className="mb-1" />
-                      <span className="text-[10px] uppercase font-bold">Adicionar</span>
+                      <Upload size={24} className={`mb-1 transition-transform ${isDragging ? 'scale-110' : ''}`} />
+                      <span className="text-[10px] uppercase font-bold text-center px-1">
+                        {isDragging ? 'Solte aqui' : 'Adicionar ou Arraste'}
+                      </span>
                     </>
                   )}
                   <input

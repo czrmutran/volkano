@@ -6,9 +6,7 @@ import Image from "next/image";
 // import { supabase } from "../../lib/supabase"; // Removed client-side supabase
 import { getOrcamentos, getProdutos, deleteProduto } from "./actions"; // Import server actions
 import Header from "../../components/header-section";
-import FooterSection from "../../components/footer";
-import { Plus, Pencil, Trash2, Search, Loader2, FileText, LayoutGrid } from "lucide-react";
-import { supabase } from "@/src/lib/supabase";
+import { Plus, Pencil, Trash2, Search, Loader2, FileText, LayoutGrid, ChevronDown, ChevronUp } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -40,6 +38,7 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [expandedOrcamentos, setExpandedOrcamentos] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (activeTab === "produtos") {
@@ -52,12 +51,7 @@ export default function AdminPage() {
   async function fetchProdutos() {
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .from("produtos")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (error) throw error;
+      const data = await getProdutos();
       if (data) setProdutos(data);
     } catch (err) {
       console.error("Erro ao buscar produtos:", err);
@@ -69,12 +63,7 @@ export default function AdminPage() {
   async function fetchOrcamentos() {
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .from("orcamentos_info")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (error) throw error;
+      const data = await getOrcamentos();
       if (data) setOrcamentos(data);
     } catch (err) {
       console.error("Erro ao buscar orçamentos:", err);
@@ -88,8 +77,9 @@ export default function AdminPage() {
 
     try {
       setDeleting(id);
-      const { error } = await supabase.from("produtos").delete().eq("id", id);
-      if (error) throw error;
+      const result = await deleteProduto(id);
+      
+      if (!result.success) throw result.error;
       
       setProdutos(produtos.filter((p) => p.id !== id));
       alert("Produto excluído com sucesso.");
@@ -229,12 +219,12 @@ export default function AdminPage() {
                             <p>{orc.telefone || "Sem telefone"} • {orc.cidade || "Cidade não informada"}</p>
                             {orc.documento && (
                               <p className="text-white/40 text-xs">
-                                {orc.tipo_documento === 'cpf' ? 'CPF' : 'CNPJ'}: {orc.documento}
+                                {orc.tipo_documento === 'cpf' || orc.documento.length <= 14 ? 'CPF' : 'CNPJ'}: {orc.documento}
                               </p>
                             )}
                             {orc.canal_contato && (
-                              <p className="text-orange-500/80 text-xs font-semibold">
-                                Preferência: {orc.canal_contato === 'whatsapp' ? 'WhatsApp' : 'E-mail'}
+                              <p className="text-orange-500/80 text-xs font-semibold mt-1">
+                                Contato via: {orc.canal_contato}
                               </p>
                             )}
                           </div>
@@ -245,15 +235,37 @@ export default function AdminPage() {
                       </div>
                       
                       <div className="bg-black/20 rounded-lg p-4">
-                        <p className="text-xs font-bold text-orange-500 mb-2 uppercase tracking-wider">Itens Solicitados</p>
-                        <ul className="space-y-2">
-                          {Array.isArray(orc.itens) && orc.itens.map((item: any, idx: number) => (
-                            <li key={idx} className="flex justify-between text-sm border-b border-white/5 pb-2 last:border-0 last:pb-0">
-                              <span className="text-white/80">{item.nome} <span className="text-white/40 text-xs">({item.linha})</span></span>
-                              <span className="font-mono text-orange-500 font-bold">x{item.quantity || 1}</span>
-                            </li>
-                          ))}
-                        </ul>
+                        <button 
+                          onClick={() => {
+                            const newSet = new Set(expandedOrcamentos);
+                            newSet.has(orc.id) ? newSet.delete(orc.id) : newSet.add(orc.id);
+                            setExpandedOrcamentos(newSet);
+                          }}
+                          className="w-full flex items-center justify-between text-left group"
+                        >
+                          <p className="text-xs font-bold text-orange-500 mb-0 uppercase tracking-wider flex items-center gap-2">
+                            Itens Solicitados
+                            <span className="bg-white/10 text-white px-1.5 py-0.5 rounded text-[10px]">
+                              {Array.isArray(orc.itens) ? orc.itens.length : 0}
+                            </span>
+                          </p>
+                          {expandedOrcamentos?.has(orc.id) ? (
+                            <ChevronUp size={16} className="text-white/50 group-hover:text-white transition" />
+                          ) : (
+                            <ChevronDown size={16} className="text-white/50 group-hover:text-white transition" />
+                          )}
+                        </button>
+                        
+                        {expandedOrcamentos.has(orc.id) && (
+                          <ul className="space-y-2 mt-4 border-t border-white/5 pt-3 animate-in fade-in slide-in-from-top-1">
+                            {Array.isArray(orc.itens) && orc.itens.map((item: any, idx: number) => (
+                              <li key={idx} className="flex justify-between text-sm border-b border-white/5 pb-2 last:border-0 last:pb-0">
+                                <span className="text-white/80">{item.nome} <span className="text-white/40 text-xs">({item.linha})</span></span>
+                                <span className="font-mono text-orange-500 font-bold">x{item.quantity || 1}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -269,7 +281,6 @@ export default function AdminPage() {
           )}
         </div>
       </main>
-      <FooterSection />
     </>
   );
 }

@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
 import Header from '../../components/header-section';
-import FooterSection from '../../components/footer';
 import type { Metadata } from 'next';
 import EquipamentosStore from '../../components/equipamentos-store';
 

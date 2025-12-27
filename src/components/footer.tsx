@@ -8,7 +8,7 @@ import { INSTAGRAM_LINK, WHATSAPP_LINK, YOUTUBE_LINK, FACEBOOK_LINK } from "./co
 
 const navLinks = [
   { href: "/", label: "Início" },
-  { href: "#equipamentos", label: "Equipamentos" },
+  { href: "/store", label: "Equipamentos" },
   { href: "/sobre-nos", label: "Sobre nós" },
   { href: "/contato", label: "Contato" },
   { href: "/blog", label: "Blog" },
@@ -101,7 +101,7 @@ export default function FooterSection() {
 
             <p className="text-sm text-white/70 leading-relaxed">
               BR 285 – esquina – R. Siqueira Couto <br />
-              FaçaBurtet, Ijuí – RS, 98700-000
+              Burtet, Ijuí – RS, 98700-000
             </p>
           </div>
 

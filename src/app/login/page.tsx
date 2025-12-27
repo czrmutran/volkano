@@ -3,7 +3,6 @@
 import { useActionState } from "react";
 import { useRouter } from "next/navigation";
 import Header from "../../components/header-section";
-import FooterSection from "../../components/footer";
 import { Lock, Loader2 } from "lucide-react";
 import { loginAction } from "./actions";
 import { useEffect } from "react";
@@ -44,7 +43,7 @@ export default function LoginPage() {
                 type="email"
                 name="email"
                 className="w-full rounded-lg bg-black/40 border border-white/10 px-4 py-3 text-white focus:border-orange-500 focus:outline-none transition"
-                placeholder="admin@volkano.com"
+                placeholder="seu@email.com"
                 required
               />
             </div>
@@ -76,7 +75,6 @@ export default function LoginPage() {
           </form>
         </div>
       </main>
-      <FooterSection />
     </>
   );
 }

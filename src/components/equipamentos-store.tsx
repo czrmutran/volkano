@@ -105,9 +105,9 @@ export default function EquipamentosStore({ categoria }: EquipamentosStoreProps)
   const getLinkLinha = (linha: string) => {
     const map: Record<string, string> = {
       "Volkano Pro": "/store/categoria-produto/volkanopro",
-      "Volkano Infinity": "/store/categoria-produto/volkanoinfinity",
-      "Volkano Black": "/store/categoria-produto/volkanoblack",
-      "Volkano Prime": "/store/categoria-produto/volkanoprime",
+      "Volkano Infinity": "/store/categoria-produto/volkano-infinity",
+      "Volkano Black": "/store/categoria-produto/volkano-black",
+      "Volkano Prime": "/store/categoria-produto/volkano-prime",
       "Hammer e Articulados": "/store/categoria-produto/hammer-e-articulados",
       "Força Variável": "/store/categoria-produto/forcavariavel",
       "Suportes": "/store/categoria-produto/suportes",
