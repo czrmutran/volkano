@@ -9,31 +9,31 @@ const equipamentos = [
     desc: "Força e amplitude de movimento.",
     img: "/articulados.webp",
     alt: "Equipamentos articulados",
-    href: "/store/hammer-e-articulados",
+    href: "/store/categoria-produto/hammer-e-articulados",
   },
   {
     desc: "Performance para treinos intensos.",
     img: "/infinity.webp",
     alt: "Volkano Infinity",
-    href: "/store/volkanoinfinity",
+    href: "/store/categoria-produto/volkano-infinity",
   },
   {
     desc: "Robustez e design premium.",
     img: "/black.webp",
     alt: "Volkano Black",
-    href: "/store/volkanoblack",
+    href: "/store/categoria-produto/volkano-black",
   },
   {
     desc: "Versatilidade e acabamento top.",
     img: "/prime.webp",
     alt: "Volkano Prime",
-    href: "/store/volkanoprime",
+    href: "/store/categoria-produto/volkano-prime",
   },
   {
     desc: "Linha profissional de alto nível.",
     img: "/volkano-pro.webp",
     alt: "Volkano Pro",
-    href: "/store/volkanopro",
+    href: "/store/categoria-produto/volkanopro",
   },
 ];
 
