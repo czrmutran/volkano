@@ -84,6 +84,15 @@ export const metadata: Metadata = {
   verification: {
     google: "código-de-verificação-google-aqui", // Placeholder para o usuário adicionar depois
   },
+  icons: {
+    icon: [
+      { url: '/favicon.png?v=2', type: 'image/png' },
+    ],
+    shortcut: ['/favicon.png?v=2'],
+    apple: [
+      { url: '/favicon.png?v=2' },
+    ],
+  },
 }
 
 export const viewport: Viewport = {
