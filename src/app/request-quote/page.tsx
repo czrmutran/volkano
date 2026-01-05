@@ -65,7 +65,7 @@ export default function RequestQuotePage() {
     message()
   )}`;
 
-  const emailLink = `mailto:cezarmutran@gmail.com?subject=${encodeURIComponent(
+  const emailLink = `mailto:comercial@volkanofitness.com.br?subject=${encodeURIComponent(
     "Solicitação de orçamento"
   )}&body=${encodeURIComponent(message())}`;
 

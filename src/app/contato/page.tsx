@@ -3,8 +3,12 @@ import ContatoSection from '../../components/contato-section';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Contato - Volkano',
-  description: 'Entre em contato com a Volkano para suporte e informações sobre nossos produtos de musculação.',
+  title: 'Fale Conosco | Suporte e Vendas',
+  description: 'Entre em contato com a equipe Volkano Fitness. Solicite orçamentos, tire dúvidas sobre equipamentos ou fale com nosso suporte técnico.',
+  openGraph: {
+    title: 'Fale com a Volkano Fitness',
+    url: 'https://volkanofitness.com.br/contato',
+  }
 };
 
 const ContatoPage = () => {

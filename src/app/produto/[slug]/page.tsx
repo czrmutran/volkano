@@ -4,6 +4,7 @@ import Header from "../../../components/header-section";
 import Link from "next/link";
 import { CartItem } from "../../../context/cart-context";
 import { ArrowLeft } from "lucide-react";
+import type { Metadata, ResolvingMetadata } from 'next';
 
 // Força a página a ser dinâmica para sempre buscar dados frescos do DB
 export const dynamic = "force-dynamic";
@@ -11,6 +12,41 @@ export const revalidate = 0;
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata(
+  { params }: PageProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const resolvedParams = await params;
+  const rawSlug = resolvedParams.slug;
+  const slugParam = decodeURIComponent(rawSlug);
+
+  const { data: prodData } = await supabase
+    .from("produtos")
+    .select("nome, descricao, imagens, categoria")
+    .or(`slug.eq.${slugParam},slug.ilike.${slugParam},nome.ilike.${slugParam}`)
+    .limit(1)
+    .maybeSingle();
+
+  if (!prodData) {
+    return {
+      title: "Produto Não Encontrado | Volkano Fitness",
+    };
+  }
+
+  const previousImages = (await parent).openGraph?.images || [];
+  const productImage = prodData.imagens?.[0] || "/banner_principal_desktop.webp";
+
+  return {
+    title: prodData.nome,
+    description: prodData.descricao?.slice(0, 160) || `Confira o ${prodData.nome} da linha ${prodData.categoria}. Equipamento profissional de alta qualidade.`,
+    openGraph: {
+      title: `${prodData.nome} | Volkano Fitness`,
+      description: prodData.descricao?.slice(0, 200),
+      images: [productImage, ...previousImages],
+    },
+  };
 }
 
 export default async function ProdutoDetalhePage({ params }: PageProps) {
