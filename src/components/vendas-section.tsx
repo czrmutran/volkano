@@ -1,5 +1,7 @@
 "use client";
 
+import { WHATSAPP_LINK_VENDAS } from "./constants";
+
 export default function VendasSection() {
   return (
     <section
@@ -40,9 +42,14 @@ export default function VendasSection() {
         </p>
 
         {/* CTA */}
-        <button className="rounded-full bg-orange-500 px-10 py-4 font-bold text-black transition-all duration-300 hover:scale-105 hover:bg-orange-400 hover:shadow-xl hover:shadow-orange-500/30">
+        <a
+          href={`${WHATSAPP_LINK_VENDAS}?text=${encodeURIComponent("Olá, gostaria de saber mais sobre os equipamentos da Volkano")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="rounded-full bg-orange-500 px-10 py-4 font-bold text-black transition-all duration-300 hover:scale-105 hover:bg-orange-400 hover:shadow-xl hover:shadow-orange-500/30"
+        >
           FALAR COM UM REPRESENTANTE
-        </button>
+        </a>
       </div>
     </section>
   );

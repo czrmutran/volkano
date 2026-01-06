@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { WHATSAPP_LINK_VENDAS } from "./constants";
 
 export default function SobreSection() {
   const containerVariants = {
@@ -60,7 +61,9 @@ export default function SobreSection() {
             {/* CTA */}
             <div className="mt-10">
               <a
-                href="#contato"
+                href={`${WHATSAPP_LINK_VENDAS}?text=${encodeURIComponent("Olá, gostaria de saber mais sobre os equipamentos da Volkano")}`}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-3 rounded-full bg-orange-500 px-8 py-4 text-sm font-bold uppercase tracking-wide text-black transition-all duration-300 hover:bg-orange-400 hover:shadow-lg hover:shadow-orange-500/40"
               >
                 Falar com representante
