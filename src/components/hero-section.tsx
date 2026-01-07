@@ -16,6 +16,7 @@ export default function HeroSection() {
         quality={100}
         sizes="100vw"
         className="md:hidden object-cover object-top"
+        unoptimized
       />
 
       {/* Desktop */}
@@ -27,6 +28,7 @@ export default function HeroSection() {
         quality={100}
         sizes="100vw"
         className="hidden md:block object-cover object-[center_60%]"
+        unoptimized
       />
     </section>
   );
