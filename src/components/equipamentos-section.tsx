@@ -7,31 +7,31 @@ import { motion } from "framer-motion";
 const equipamentos = [
   {
     desc: "Força e amplitude de movimento.",
-    img: "/articulados.webp",
+    img: "/articulados.png",
     alt: "Equipamentos articulados",
     href: "/store/categoria-produto/hammer-e-articulados",
   },
   {
     desc: "Performance para treinos intensos.",
-    img: "/infinity.webp",
+    img: "/infinity.png",
     alt: "Volkano Infinity",
     href: "/store/categoria-produto/volkano-infinity",
   },
   {
     desc: "Robustez e design premium.",
-    img: "/black.webp",
+    img: "/black.png",
     alt: "Volkano Black",
     href: "/store/categoria-produto/volkano-black",
   },
   {
     desc: "Versatilidade e acabamento top.",
-    img: "/prime.webp",
+    img: "/prime.png",
     alt: "Volkano Prime",
     href: "/store/categoria-produto/volkano-prime",
   },
   {
     desc: "Linha profissional de alto nível.",
-    img: "/volkano-pro.webp",
+    img: "/volkano-pro.png",
     alt: "Volkano Pro",
     href: "/store/categoria-produto/volkanopro",
   },
@@ -112,6 +112,7 @@ export default function EquipamentosSection() {
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                     quality={90}
+                    unoptimized
                   />
 
                   {/* Overlay bem mais leve (pra parecer com a 2ª imagem) */}
