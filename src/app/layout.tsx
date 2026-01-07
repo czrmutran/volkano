@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     siteName: "Volkano Fitness",
     images: [
       {
-        url: "/banner_principal_desktop_2.png", // Imagem padrão para compartilhamento
+        url: "/banner_principal_desktop_2.webp", // Imagem padrão para compartilhamento
         width: 1200,
         height: 630,
         alt: "Volkano Fitness Equipamentos",
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Volkano Fitness",
     description: "Equipamentos de musculação de alta performance para sua academia.",
-    images: ["/banner_principal_desktop_2.png"],
+    images: ["/banner_principal_desktop_2.webp"],
   },
   robots: {
     index: true,

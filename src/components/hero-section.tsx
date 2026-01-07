@@ -9,7 +9,7 @@ export default function HeroSection() {
     >
       {/* Mobile */}
       <Image
-        src="/banner_principal_mobile_2.png"
+        src="/banner_principal_mobile_2.webp"
         alt="Banner principal da Volkano"
         fill
         priority
@@ -20,7 +20,7 @@ export default function HeroSection() {
 
       {/* Desktop */}
       <Image
-        src="/banner_principal_desktop_2.png"
+        src="/banner_principal_desktop_2.webp"
         alt="Banner principal da Volkano"
         fill
         priority

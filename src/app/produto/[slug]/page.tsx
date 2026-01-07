@@ -36,7 +36,7 @@ export async function generateMetadata(
   }
 
   const previousImages = (await parent).openGraph?.images || [];
-  const productImage = prodData.imagens?.[0] || "/banner_principal_desktop_2.png";
+  const productImage = prodData.imagens?.[0] || "/banner_principal_desktop_2.webp";
 
   return {
     title: prodData.nome,
