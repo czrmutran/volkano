@@ -9,18 +9,18 @@ export default function HeroSection() {
     >
       {/* Mobile */}
       <Image
-        src="/banner_principal_mobile.webp"
+        src="/banner_principal_mobile.png"
         alt="Banner principal da Volkano"
         fill
         priority
         quality={100}
         sizes="100vw"
-        className="md:hidden object-contain object-top"
+        className="md:hidden object-cover object-top"
       />
 
       {/* Desktop */}
       <Image
-        src="/banner_principal_desktop.webp"
+        src="/banner_principal_desktop.png"
         alt="Banner principal da Volkano"
         fill
         priority

@@ -58,7 +58,7 @@ export default function ProdutoDetalheClient({ produto, relacionados }: ProdutoD
             {/* Galeria de Imagens */}
             <div className="space-y-3 lg:sticky lg:top-24">
               <div 
-                className="relative w-full aspect-square rounded-xl overflow-hidden border border-white/10 bg-white/5 cursor-zoom-in group"
+                className="relative w-full aspect-square rounded-xl overflow-hidden border border-white/10 bg-white cursor-zoom-in group"
                 onMouseEnter={() => setIsZoomed(true)}
                 onMouseLeave={() => setIsZoomed(false)}
                 onMouseMove={handleMouseMove}
@@ -80,7 +80,7 @@ export default function ProdutoDetalheClient({ produto, relacionados }: ProdutoD
                     <button
                       key={idx}
                       onClick={() => setMainImage(img)}
-                      className={`relative w-14 h-14 flex-shrink-0 rounded-lg overflow-hidden border transition-all ${
+                      className={`relative w-14 h-14 flex-shrink-0 rounded-lg overflow-hidden border transition-all bg-white ${
                         mainImage === img ? "border-orange-500 ring-1 ring-orange-500" : "border-white/10 hover:border-white/30"
                       }`}
                     >
@@ -88,7 +88,7 @@ export default function ProdutoDetalheClient({ produto, relacionados }: ProdutoD
                         src={img}
                         alt={`Imagem ${idx + 1}`}
                         fill
-                        className="object-cover"
+                        className="object-contain p-1"
                       />
                     </button>
                   ))}
@@ -180,7 +180,7 @@ export default function ProdutoDetalheClient({ produto, relacionados }: ProdutoD
                     href={`/produto/${rel.slug || encodeURIComponent(rel.nome)}`}
                     className="group block rounded-xl border border-white/10 bg-white/5 overflow-hidden transition-all hover:border-orange-500/50 hover:-translate-y-1"
                   >
-                    <div className="relative aspect-[4/5] w-full">
+                    <div className="relative aspect-[4/5] w-full bg-white">
                       <Image
                         src={rel.img}
                         alt={rel.alt}

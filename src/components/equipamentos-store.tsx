@@ -4,7 +4,7 @@ import { useMemo, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Filter, CheckCircle } from "lucide-react";
+import { Filter, CheckCircle, Grid, LayoutGrid, Maximize2 } from "lucide-react";
 import { supabase } from "../lib/supabase";
 import { useCart, CartItem } from "../context/cart-context";
 
@@ -31,6 +31,7 @@ export default function EquipamentosStore({ categoria }: EquipamentosStoreProps)
   const [sort, setSort] = useState<SortKey>("padrao");
   const [visibleCount, setVisibleCount] = useState(12);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [gridColumns, setGridColumns] = useState<2 | 3 | 4>(3); // Default: 3 colunas (tamanho médio)
   const [equipamentos, setEquipamentos] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -228,23 +229,62 @@ export default function EquipamentosStore({ categoria }: EquipamentosStoreProps)
             )}
           </div>
 
-          {/* Topo: exibindo + ordenação */}
+          {/* Topo: exibindo + ordenação + grid toggle */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <p className="text-white/70">
+            <p className="text-white/70 text-sm">
               Exibindo 1–{Math.min(visibleCount, total)} de {total} resultados
             </p>
 
-            <div className="flex items-center gap-3">
-              <span className="text-white/50">Ordenar</span>
-              <select
-                value={sort}
-                onChange={(e) => setSort(e.target.value as SortKey)}
-                className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-white outline-none focus:border-orange-500 cursor-pointer"
-              >
-                <option value="padrao">Padrão</option>
-                <option value="nome_asc">Nome: A–Z</option>
-                <option value="nome_desc">Nome: Z–A</option>
-              </select>
+            <div className="flex flex-wrap items-center gap-4">
+              {/* Grid Toggle (Desktop Only) */}
+              <div className="hidden xl:flex items-center bg-white/5 rounded-lg p-1 border border-white/10">
+                <button
+                  onClick={() => setGridColumns(4)}
+                  className={`p-1.5 rounded-md transition-all ${
+                    gridColumns === 4 
+                      ? "bg-orange-500 text-black shadow-sm" 
+                      : "text-white/50 hover:text-white hover:bg-white/10"
+                  }`}
+                  title="Visualização Padrão (4 colunas)"
+                >
+                  <Grid size={18} />
+                </button>
+                <button
+                  onClick={() => setGridColumns(3)}
+                  className={`p-1.5 rounded-md transition-all ${
+                    gridColumns === 3 
+                      ? "bg-orange-500 text-black shadow-sm" 
+                      : "text-white/50 hover:text-white hover:bg-white/10"
+                  }`}
+                  title="Visualização Média (3 colunas)"
+                >
+                  <LayoutGrid size={18} />
+                </button>
+                <button
+                  onClick={() => setGridColumns(2)}
+                  className={`p-1.5 rounded-md transition-all ${
+                    gridColumns === 2 
+                      ? "bg-orange-500 text-black shadow-sm" 
+                      : "text-white/50 hover:text-white hover:bg-white/10"
+                  }`}
+                  title="Visualização Ampliada (2 colunas)"
+                >
+                  <Maximize2 size={18} />
+                </button>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <span className="text-white/50 text-sm">Ordenar</span>
+                <select
+                  value={sort}
+                  onChange={(e) => setSort(e.target.value as SortKey)}
+                  className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white outline-none focus:border-orange-500 cursor-pointer [&>option]:bg-black [&>option]:text-white"
+                >
+                  <option value="padrao">Padrão</option>
+                  <option value="nome_asc">Nome: A–Z</option>
+                  <option value="nome_desc">Nome: Z–A</option>
+                </select>
+              </div>
             </div>
           </div>
 
@@ -254,7 +294,16 @@ export default function EquipamentosStore({ categoria }: EquipamentosStoreProps)
               <p className="text-white/50 animate-pulse">Carregando equipamentos...</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div 
+              className={`grid gap-4 transition-all duration-300 ${
+                // Mobile sempre 2 colunas. Desktop muda conforme state.
+                gridColumns === 4 
+                  ? "grid-cols-2 md:grid-cols-3 xl:grid-cols-4" 
+                  : gridColumns === 3 
+                    ? "grid-cols-2 md:grid-cols-3 xl:grid-cols-3" 
+                    : "grid-cols-2 md:grid-cols-2 xl:grid-cols-2"
+              }`}
+            >
               {displayedItems.map((item) => {
                 const isAdded = isInCart(item.id);
 
@@ -264,13 +313,19 @@ export default function EquipamentosStore({ categoria }: EquipamentosStoreProps)
                     className="group relative flex flex-col overflow-hidden rounded-xl border border-white/10 bg-white/[.02]"
                   >
                     <Link href={getProductLink(item)}>
-                      <div className="relative w-full aspect-[3/4] cursor-pointer bg-black/20">
+                      <div className="relative w-full aspect-[3/4] cursor-pointer bg-white">
                         <Image
                           src={item.img}
                           alt={item.alt}
                           fill
                           className="object-contain p-4 transition-transform duration-500 group-hover:scale-105"
-                          sizes="(max-width: 768px) 50vw, (max-width: 1280px) 25vw, 20vw"
+                          sizes={
+                            gridColumns === 2 
+                              ? "(max-width: 768px) 50vw, 50vw" 
+                              : gridColumns === 3
+                                ? "(max-width: 768px) 50vw, 33vw"
+                                : "(max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                          }
                           quality={80}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent pointer-events-none" />
@@ -279,7 +334,7 @@ export default function EquipamentosStore({ categoria }: EquipamentosStoreProps)
 
                     <div className="p-4 flex flex-col flex-1">
                       <Link href={getProductLink(item)} className="hover:text-orange-500 transition-colors">
-                        <p className="text-sm font-extrabold text-white/90">
+                        <p className={`font-extrabold text-white/90 ${gridColumns === 2 ? 'text-lg' : 'text-sm'}`}>
                           {item.nome}
                         </p>
                       </Link>
@@ -331,5 +386,5 @@ export default function EquipamentosStore({ categoria }: EquipamentosStoreProps)
       </div>
     </div>
   </section>
-);
+  );
 }

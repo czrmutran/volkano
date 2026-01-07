@@ -162,7 +162,7 @@ export default function RequestQuotePage() {
                       className="p-6 flex flex-col md:flex-row md:items-center gap-6"
                     >
                       <div className="flex items-center gap-4 flex-1">
-                        <div className="relative h-20 w-20 flex-shrink-0 rounded-lg overflow-hidden border border-white/10 bg-white/5">
+                        <div className="relative h-20 w-20 flex-shrink-0 rounded-lg overflow-hidden border border-white/10 bg-white">
                           <Image
                             src={item.img}
                             alt={item.alt}

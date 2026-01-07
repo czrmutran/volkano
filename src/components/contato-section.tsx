@@ -59,7 +59,7 @@ export default function ContatoSection() {
                   <h3 className="mb-1 text-lg font-bold">Endereço</h3>
                   <p className="text-white/70">
                     BR 285 – esquina – R. Siqueira Couto<br />
-                    FaçaBurtet, Ijuí – RS, 98700-000
+                    Burtet, Ijuí – RS, 98700-000
                   </p>
                 </div>
               </div>

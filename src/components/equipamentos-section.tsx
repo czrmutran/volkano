@@ -105,7 +105,7 @@ export default function EquipamentosSection() {
                 className="group relative flex min-w-0 flex-col h-full w-full overflow-hidden rounded-md border border-white/15 bg-black/80"
               >
                 {/* Imagem com proporção tipo poster (mais “quadrada”) */}
-                <div className="relative w-full aspect-[3/4]">
+                <div className="relative w-full aspect-[3/4] bg-white">
                   <Image
                     src={item.img}
                     alt={item.alt}
