@@ -186,6 +186,7 @@ export default function ProdutoDetalheClient({ produto, relacionados }: ProdutoD
                         alt={rel.alt}
                         fill
                         className="object-contain p-4 transition-transform duration-500 group-hover:scale-110"
+                        unoptimized
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
                     </div>

@@ -327,6 +327,7 @@ export default function EquipamentosStore({ categoria }: EquipamentosStoreProps)
                                 : "(max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw"
                           }
                           quality={80}
+                          unoptimized
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent pointer-events-none" />
                       </div>
