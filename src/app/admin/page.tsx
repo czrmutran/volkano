@@ -6,7 +6,7 @@ import Image from "next/image";
 // import { supabase } from "../../lib/supabase"; // Removed client-side supabase
 import { getOrcamentos, getProdutos, deleteProduto } from "./actions"; // Import server actions
 import Header from "../../components/header-section";
-import { Plus, Pencil, Trash2, Search, Loader2, FileText, LayoutGrid, ChevronDown, ChevronUp } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, Loader2, FileText, LayoutGrid, ChevronDown, ChevronUp, MapPin } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +24,7 @@ type Orcamento = {
   email: string | null;
   telefone: string | null;
   cidade: string | null;
+  estado: string | null;
   documento: string | null;
   tipo_documento: string | null;
   canal_contato: string | null;
@@ -217,7 +218,10 @@ export default function AdminPage() {
                           <h3 className="text-xl font-bold text-white mb-1">{orc.nome}</h3>
                           <div className="text-sm text-white/60 space-y-1">
                             <p>{orc.email || "Sem e-mail"}</p>
-                            <p>{orc.telefone || "Sem telefone"} • {orc.cidade || "Cidade não informada"}</p>
+                            <p>
+                              {orc.telefone || "Sem telefone"} • {orc.cidade || "Cidade não informada"}
+                              {orc.estado && ` / ${orc.estado}`}
+                            </p>
                             {orc.documento && (
                               <p className="text-white/40 text-xs">
                                 {orc.tipo_documento === 'cpf' || orc.documento.length <= 14 ? 'CPF' : 'CNPJ'}: {orc.documento}

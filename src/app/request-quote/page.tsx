@@ -22,6 +22,7 @@ export default function RequestQuotePage() {
   const [email, setEmail] = useState("");
   const [telefone, setTelefone] = useState("");
   const [cidade, setCidade] = useState("");
+  const [estado, setEstado] = useState("");
   const [docType, setDocType] = useState<"CPF" | "CNPJ">("CPF");
   const [documento, setDocumento] = useState("");
   const [loading, setLoading] = useState(false);
@@ -80,6 +81,7 @@ export default function RequestQuotePage() {
           email,
           telefone,
           cidade,
+          estado,
           documento,
           tipo_documento: docType,
           canal_contato: canal,
@@ -233,10 +235,11 @@ export default function RequestQuotePage() {
               <div className="space-y-3">
                 {/* Nome */}
                 <div>
+                  <label className="block text-sm font-bold mb-2 text-white/70">Nome Completo *</label>
                   <input
                     value={nome}
                     onChange={(e) => setNome(e.target.value)}
-                    placeholder="Nome completo"
+                    placeholder="Ex: João Silva"
                     className={`w-full rounded-lg border ${
                       errors.nome ? "border-red-500" : "border-white/10"
                     } bg-black/20 px-4 py-3 text-white placeholder-white/30 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 transition`}
@@ -250,10 +253,11 @@ export default function RequestQuotePage() {
 
                 {/* Email */}
                 <div>
+                  <label className="block text-sm font-bold mb-2 text-white/70">E-mail *</label>
                   <input
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="E-mail"
+                    placeholder="Ex: joao@email.com"
                     type="email"
                     className={`w-full rounded-lg border ${
                       errors.email ? "border-red-500" : "border-white/10"
@@ -266,29 +270,33 @@ export default function RequestQuotePage() {
                   )}
                 </div>
 
-                {/* Telefone e Cidade */}
+                {/* Telefone */}
+                <div>
+                  <label className="block text-sm font-bold mb-2 text-white/70">Celular *</label>
+                  <input
+                    value={telefone}
+                    onChange={handlePhoneChange}
+                    placeholder="(DD) 91234-5678"
+                    maxLength={15}
+                    className={`w-full rounded-lg border ${
+                      errors.telefone ? "border-red-500" : "border-white/10"
+                    } bg-black/20 px-4 py-3 text-white placeholder-white/30 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 transition`}
+                  />
+                  {errors.telefone && (
+                    <p className="text-xs text-red-500 mt-1 ml-1">
+                      {errors.telefone}
+                    </p>
+                  )}
+                </div>
+
+                {/* Cidade e Estado */}
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <input
-                      value={telefone}
-                      onChange={handlePhoneChange}
-                      placeholder="Celular"
-                      maxLength={15}
-                      className={`w-full rounded-lg border ${
-                        errors.telefone ? "border-red-500" : "border-white/10"
-                      } bg-black/20 px-4 py-3 text-white placeholder-white/30 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 transition`}
-                    />
-                    {errors.telefone && (
-                      <p className="text-xs text-red-500 mt-1 ml-1">
-                        {errors.telefone}
-                      </p>
-                    )}
-                  </div>
-                  <div>
+                    <label className="block text-sm font-bold mb-2 text-white/70">Cidade *</label>
                     <input
                       value={cidade}
                       onChange={(e) => setCidade(e.target.value)}
-                      placeholder="Cidade"
+                      placeholder="Ex: São Paulo"
                       className={`w-full rounded-lg border ${
                         errors.cidade ? "border-red-500" : "border-white/10"
                       } bg-black/20 px-4 py-3 text-white placeholder-white/30 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 transition`}
@@ -296,6 +304,28 @@ export default function RequestQuotePage() {
                     {errors.cidade && (
                       <p className="text-xs text-red-500 mt-1 ml-1">
                         {errors.cidade}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold mb-2 text-white/70">Estado (UF) *</label>
+                    <select
+                      value={estado}
+                      onChange={(e) => setEstado(e.target.value)}
+                      className={`w-full rounded-lg border ${
+                        errors.estado ? "border-red-500" : "border-white/10"
+                      } bg-black/20 px-4 py-3 text-white placeholder-white/30 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 transition [&>option]:bg-black [&>option]:text-white appearance-none`}
+                    >
+                      <option value="">Selecione</option>
+                      {["AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"].map((uf) => (
+                        <option key={uf} value={uf}>
+                          {uf}
+                        </option>
+                      ))}
+                    </select>
+                    {errors.estado && (
+                      <p className="text-xs text-red-500 mt-1 ml-1">
+                        {errors.estado}
                       </p>
                     )}
                   </div>
