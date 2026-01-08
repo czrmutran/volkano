@@ -70,6 +70,7 @@ export default function ProdutoDetalheClient({ produto, relacionados }: ProdutoD
                   className={`object-contain p-4 transition-transform duration-200 ease-out ${isZoomed ? 'scale-[2]' : 'scale-100'}`}
                   style={{ transformOrigin: isZoomed ? transformOrigin : "center" }}
                   priority
+                  unoptimized
                 />
               </div>
               
@@ -89,6 +90,7 @@ export default function ProdutoDetalheClient({ produto, relacionados }: ProdutoD
                         alt={`Imagem ${idx + 1}`}
                         fill
                         className="object-contain p-1"
+                        unoptimized
                       />
                     </button>
                   ))}
