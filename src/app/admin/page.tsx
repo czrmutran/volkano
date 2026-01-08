@@ -164,12 +164,13 @@ export default function AdminPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {filteredProdutos.map((prod) => (
                     <div key={prod.id} className="bg-white/5 border border-white/10 rounded-xl overflow-hidden group hover:border-orange-500/50 transition">
-                      <div className="relative h-48 w-full bg-black/20">
+                      <div className="relative h-48 w-full bg-white">
                         <Image
                           src={prod.imagens?.[0] || "/placeholder.webp"}
                           alt={prod.nome}
                           fill
                           className="object-contain p-4"
+                          unoptimized
                         />
                       </div>
                       
@@ -260,7 +261,11 @@ export default function AdminPage() {
                           <ul className="space-y-2 mt-4 border-t border-white/5 pt-3 animate-in fade-in slide-in-from-top-1">
                             {Array.isArray(orc.itens) && orc.itens.map((item: any, idx: number) => (
                               <li key={idx} className="flex justify-between text-sm border-b border-white/5 pb-2 last:border-0 last:pb-0">
-                                <span className="text-white/80">{item.nome} <span className="text-white/40 text-xs">({item.linha})</span></span>
+                                <span className="text-white/80">
+                                  {item.nome} 
+                                  {item.codigo && <span className="text-orange-500 text-xs font-bold ml-1">[{item.codigo}]</span>}
+                                  <span className="text-white/40 text-xs ml-1">({item.linha})</span>
+                                </span>
                                 <span className="font-mono text-orange-500 font-bold">x{item.quantity || 1}</span>
                               </li>
                             ))}

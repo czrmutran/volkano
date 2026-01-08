@@ -50,8 +50,10 @@ export default function RequestQuotePage() {
 
   const message = () => {
     const lines = cart.map(
-      (i, idx) =>
-        `${idx + 1}. ${i.nome} (${i.linha}) - Qtd: ${i.quantity || 1}`
+      (i, idx) => {
+        const codigoInfo = i.codigo ? ` (Cód: ${i.codigo})` : "";
+        return `${idx + 1}. ${i.nome}${codigoInfo} (${i.linha}) - Qtd: ${i.quantity || 1}`;
+      }
     );
 
     const intro = nome

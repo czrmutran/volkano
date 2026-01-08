@@ -394,12 +394,13 @@ export default function NovoProdutoPage() {
                 
                 <div className="flex flex-wrap gap-4 mb-4">
                   {imagens.map((url, idx) => (
-                    <div key={idx} className="relative w-24 h-24 rounded-lg overflow-hidden border border-white/20 group">
+                    <div key={idx} className="relative w-24 h-24 rounded-lg overflow-hidden border border-white/20 group bg-white">
                       <Image
                         src={url}
                         alt={`Preview ${idx}`}
                         fill
-                        className="object-cover"
+                        className="object-contain p-1"
+                        unoptimized
                       />
                       <button
                         type="button"

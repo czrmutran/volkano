@@ -27,7 +27,7 @@ export default function HeroSection() {
         priority
         quality={100}
         sizes="100vw"
-        className="hidden md:block object-cover object-[center_60%]"
+        className="hidden md:block object-cover object-top"
         unoptimized
       />
     </section>
