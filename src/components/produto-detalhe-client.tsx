@@ -11,9 +11,11 @@ import Header from "./header-section";
 interface ProdutoDetalheClientProps {
   produto: CartItem;
   relacionados: CartItem[];
+  especificacoes?: Record<string, string>;
+  caracteristicas?: { image: string; text: string }[];
 }
 
-export default function ProdutoDetalheClient({ produto, relacionados }: ProdutoDetalheClientProps) {
+export default function ProdutoDetalheClient({ produto, relacionados, especificacoes, caracteristicas }: ProdutoDetalheClientProps) {
   const [mainImage, setMainImage] = useState(produto.img);
   const { addToCart, isInCart } = useCart();
   const [isZoomed, setIsZoomed] = useState(false);
@@ -31,7 +33,7 @@ export default function ProdutoDetalheClient({ produto, relacionados }: ProdutoD
   };
 
   const getYoutubeId = (url: string) => {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/)([^#&?]*).*/;
     const match = url.match(regExp);
     return (match && match[2].length === 11) ? match[2] : null;
   };
@@ -142,7 +144,7 @@ export default function ProdutoDetalheClient({ produto, relacionados }: ProdutoD
               <div className="h-px w-full bg-white/10 mb-6" />
 
               <div className="mb-6 flex-1 overflow-y-auto max-h-[300px] pr-2 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-white/20">
-                <h3 className="text-sm font-bold mb-2 uppercase text-white/50">Descrição</h3>
+                <h3 className="text-sm font-bold mb-2 uppercase text-white/50 mx-auto">Descrição</h3>
                 <div className="text-white/80 text-xs leading-relaxed whitespace-pre-wrap">
                   {produto.desc}
                 </div>
@@ -151,8 +153,8 @@ export default function ProdutoDetalheClient({ produto, relacionados }: ProdutoD
               {/* Vídeo do YouTube */}
               {youtubeId && (
                 <div className="mb-6">
-                  <h3 className="text-sm font-bold mb-2 uppercase text-white/50">Vídeo</h3>
-                  <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-white/10 bg-white/5">
+                  <h3 className="text-sm font-bold mb-2 uppercase text-white/50 text-center">Vídeo</h3>
+                  <div className="relative w-full max-w-[320px] aspect-[9/16] rounded-xl overflow-hidden border border-white/10 bg-white/5 shadow-2xl mx-auto">
                     <iframe
                       width="100%"
                       height="100%"
@@ -167,6 +169,63 @@ export default function ProdutoDetalheClient({ produto, relacionados }: ProdutoD
               )}
             </div>
           </div>
+
+          {/* Especificações Técnicas */}
+          {especificacoes && Object.keys(especificacoes).length > 0 && (
+            <div className="mt-16 bg-white/5 rounded-2xl p-8 md:p-12 border border-white/10">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div>
+                  <h2 className="text-xl md:text-2xl font-black uppercase mb-8">
+                    Especificações <span className="text-orange-500">Técnicas</span>
+                  </h2>
+                  <div className="space-y-4">
+                    {Object.entries(especificacoes).map(([key, value], idx) => (
+                      <div key={idx} className="flex flex-col border-b border-white/10 pb-4 last:border-0 last:pb-0">
+                        <span className="text-sm font-bold text-white/50 uppercase mb-1">{key}</span>
+                        <span className="text-lg font-bold text-white">{value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="relative aspect-square w-full max-w-md mx-auto bg-white rounded-xl overflow-hidden p-6">
+                  <Image
+                    src={produto.img}
+                    alt="Especificações do Produto"
+                    fill
+                    className="object-contain"
+                    unoptimized
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Características (Cards Visuais) */}
+          {caracteristicas && caracteristicas.length > 0 && (
+            <div className="mt-16">
+              <h2 className="text-xl md:text-2xl font-black uppercase mb-8 text-center">
+                Detalhes
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {caracteristicas.map((feat, idx) => (
+                  <div key={idx} className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col items-center text-center group hover:border-orange-500/50 transition">
+                    <div className="relative w-full h-32 mb-4">
+                      <Image
+                        src={feat.image}
+                        alt={feat.text}
+                        fill
+                        className="object-contain"
+                        unoptimized
+                      />
+                    </div>
+                    <p className="text-sm font-bold text-white leading-relaxed">
+                      {feat.text}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Produtos Relacionados */}
           {relacionados.length > 0 && (

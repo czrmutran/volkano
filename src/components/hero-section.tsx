@@ -5,7 +5,7 @@ export default function HeroSection() {
     <section
       id="home"
       className="relative mt-20 w-full bg-black
-                 h-[34svh] md:h-[calc(100vh-1px)]"
+                 h-[34svh] md:h-auto"
     >
       {/* Mobile */}
       <Image
@@ -23,11 +23,12 @@ export default function HeroSection() {
       <Image
         src="/banner_principal_desktop_2.webp"
         alt="Banner principal da Volkano"
-        fill
+        width={1920}
+        height={1080}
         priority
         quality={100}
         sizes="100vw"
-        className="hidden md:block object-cover object-top"
+        className="hidden md:block w-full h-auto"
         unoptimized
       />
     </section>

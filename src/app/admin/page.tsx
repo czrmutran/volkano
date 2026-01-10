@@ -6,7 +6,7 @@ import Image from "next/image";
 // import { supabase } from "../../lib/supabase"; // Removed client-side supabase
 import { getOrcamentos, getProdutos, deleteProduto } from "./actions"; // Import server actions
 import Header from "../../components/header-section";
-import { Plus, Pencil, Trash2, Search, Loader2, FileText, LayoutGrid, ChevronDown, ChevronUp, MapPin } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, Loader2, FileText, LayoutGrid, ChevronDown, ChevronUp, MapPin, ExternalLink } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +16,7 @@ type Produto = {
   codigo: string | null;
   categoria: string;
   imagens: string[];
+  slug: string | null;
 };
 
 type Orcamento = {
@@ -185,6 +186,16 @@ export default function AdminPage() {
                         </div>
 
                         <div className="flex gap-2">
+                          {prod.slug && (
+                            <Link
+                              href={`/produto/${prod.slug}`}
+                              target="_blank"
+                              className="flex items-center justify-center bg-orange-500/10 hover:bg-orange-500/20 text-orange-500 px-3 rounded-lg transition"
+                              title="Visualizar na Loja"
+                            >
+                              <ExternalLink size={18} />
+                            </Link>
+                          )}
                           <Link
                             href={`/admin/editar-produto/${prod.id}`}
                             className="flex-1 flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white py-2 rounded-lg text-sm font-bold transition"

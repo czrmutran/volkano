@@ -111,7 +111,7 @@ export default async function ProdutoDetalhePage({ params }: PageProps) {
       console.log("[ProdutoPage] Fallback final: Varredura local...");
       const { data: allProds } = await supabase
         .from("produtos")
-        .select("id, nome, slug, categoria, codigo, descricao, imagens, video_url");
+        .select("id, nome, slug, categoria, codigo, descricao, imagens, video_url, especificacoes, caracteristicas");
 
       if (allProds) {
         const normalize = (str: string) => str
@@ -209,5 +209,5 @@ export default async function ProdutoDetalhePage({ params }: PageProps) {
     console.error("[ProdutoPage] Erro ao buscar relacionados:", err);
   }
 
-  return <ProdutoDetalheClient produto={produto} relacionados={relacionados} />;
+  return <ProdutoDetalheClient produto={produto} relacionados={relacionados} especificacoes={prodData.especificacoes} caracteristicas={prodData.caracteristicas} />;
 }

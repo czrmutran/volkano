@@ -5,7 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import { supabase } from "../../../../lib/supabase";
 import Header from "../../../../components/header-section";
 import FooterSection from "../../../../components/footer";
-import { Upload, X, Loader2, ArrowLeft } from "lucide-react";
+import { Upload, X, Loader2, ArrowLeft, Plus, Trash2, ExternalLink } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -41,6 +41,9 @@ export default function EditarProdutoPage() {
   });
   
   const [imagens, setImagens] = useState<string[]>([]);
+  const [specs, setSpecs] = useState<{ key: string; value: string }[]>([]);
+  const [features, setFeatures] = useState<{ image: string; text: string }[]>([]);
+  const [featureUploading, setFeatureUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
@@ -65,6 +68,18 @@ export default function EditarProdutoPage() {
             slug: data.slug || "",
           });
           setImagens(data.imagens || []);
+          
+          if (data.especificacoes) {
+            const loadedSpecs = Object.entries(data.especificacoes).map(([key, value]) => ({
+              key,
+              value: String(value)
+            }));
+            setSpecs(loadedSpecs);
+          }
+
+          if (data.caracteristicas && Array.isArray(data.caracteristicas)) {
+            setFeatures(data.caracteristicas);
+          }
         }
       } catch (err) {
         console.error("Erro ao carregar produto:", err);
@@ -142,6 +157,61 @@ export default function EditarProdutoPage() {
     setImagens((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const handleAddSpec = () => {
+    setSpecs([...specs, { key: "", value: "" }]);
+  };
+
+  const handleRemoveSpec = (index: number) => {
+    setSpecs(specs.filter((_, i) => i !== index));
+  };
+
+  const handleSpecChange = (index: number, field: "key" | "value", value: string) => {
+    const newSpecs = [...specs];
+    newSpecs[index][field] = value;
+    setSpecs(newSpecs);
+  };
+
+  const handleFeatureFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    const file = e.target.files[0];
+    
+    setFeatureUploading(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `feat_${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+      const filePath = `produtos/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('produtos')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('produtos')
+        .getPublicUrl(filePath);
+
+      setFeatures([...features, { image: publicUrl, text: "" }]);
+    } catch (err) {
+      console.error("Erro no upload da característica:", err);
+      alert("Erro ao enviar imagem.");
+    } finally {
+      setFeatureUploading(false);
+      // Reset input
+      e.target.value = "";
+    }
+  };
+
+  const handleFeatureTextChange = (index: number, text: string) => {
+    const newFeatures = [...features];
+    newFeatures[index].text = text;
+    setFeatures(newFeatures);
+  };
+
+  const handleRemoveFeature = (index: number) => {
+    setFeatures(features.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.nome || !formData.categoria) {
@@ -152,6 +222,11 @@ export default function EditarProdutoPage() {
     setSaving(true);
 
     try {
+      const specsObj = specs.reduce((acc, item) => {
+        if (item.key.trim()) acc[item.key] = item.value;
+        return acc;
+      }, {} as Record<string, string>);
+
       const { error } = await supabase
         .from("produtos")
         .update({
@@ -162,6 +237,8 @@ export default function EditarProdutoPage() {
           video_url: formData.video_url || null,
           slug: formData.slug || null,
           imagens: imagens,
+          especificacoes: specsObj,
+          caracteristicas: features,
         })
         .eq("id", id);
 
@@ -222,6 +299,18 @@ export default function EditarProdutoPage() {
                 placeholder="ex: supino-reto-profissional"
               />
               <p className="text-xs text-white/30 mt-1">Deixe em branco para usar o padrão.</p>
+              {formData.slug && (
+                <div className="mt-3">
+                  <Link 
+                    href={`/produto/${formData.slug}`} 
+                    target="_blank" 
+                    className="inline-flex items-center gap-2 text-orange-500 hover:text-orange-400 text-sm font-bold transition"
+                  >
+                    <ExternalLink size={16} /> 
+                    Visualizar Produto na Loja
+                  </Link>
+                </div>
+              )}
             </div>
 
             {/* Código e Categoria */}
@@ -329,6 +418,98 @@ export default function EditarProdutoPage() {
                   />
                 </label>
               </div>
+            </div>
+
+            {/* Especificações Técnicas */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-bold text-white/70">Especificações Técnicas</label>
+                <button
+                  type="button"
+                  onClick={handleAddSpec}
+                  className="text-xs flex items-center gap-1 bg-white/10 hover:bg-white/20 text-white px-2 py-1 rounded transition"
+                >
+                  <Plus size={12} /> Adicionar Campo
+                </button>
+              </div>
+              
+              <div className="space-y-2">
+                {specs.map((spec, idx) => (
+                  <div key={idx} className="flex gap-2">
+                    <input
+                      type="text"
+                      value={spec.key}
+                      onChange={(e) => handleSpecChange(idx, "key", e.target.value)}
+                      placeholder="Característica (ex: Altura)"
+                      className="flex-1 rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none transition"
+                    />
+                    <input
+                      type="text"
+                      value={spec.value}
+                      onChange={(e) => handleSpecChange(idx, "value", e.target.value)}
+                      placeholder="Valor (ex: 200cm)"
+                      className="flex-1 rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none transition"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveSpec(idx)}
+                      className="bg-red-500/10 hover:bg-red-500/20 text-red-500 p-2 rounded-lg transition"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                ))}
+                {specs.length === 0 && (
+                  <p className="text-xs text-white/30 italic">Nenhuma especificação adicionada.</p>
+                )}
+              </div>
+            </div>
+
+            {/* Características Visuais (Cards) */}
+            <div>
+              <label className="block text-sm font-bold mb-2 text-white/70">Detalhes (Cards com Foto)</label>
+              
+              <div className="space-y-3 mb-3">
+                {features.map((feat, idx) => (
+                  <div key={idx} className="flex items-center gap-4 bg-white/5 p-3 rounded-lg border border-white/10">
+                    <div className="relative w-16 h-16 bg-white rounded overflow-hidden flex-shrink-0">
+                      <Image 
+                        src={feat.image} 
+                        alt="Feature" 
+                        fill 
+                        className="object-contain p-1"
+                        unoptimized 
+                      />
+                    </div>
+                    <input
+                      type="text"
+                      value={feat.text}
+                      onChange={(e) => handleFeatureTextChange(idx, e.target.value)}
+                      placeholder="Texto da característica (ex: Acabamento em Inox)"
+                      className="flex-1 bg-transparent border-b border-white/10 focus:border-orange-500 outline-none text-sm py-2 transition"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveFeature(idx)}
+                      className="p-2 text-white/30 hover:text-red-500 transition"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <label className={`inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg cursor-pointer transition text-sm font-bold ${featureUploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                {featureUploading ? <Loader2 className="animate-spin" size={16} /> : <Plus size={16} />}
+                {featureUploading ? "Enviando..." : "Adicionar Detalhe"}
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  className="hidden" 
+                  onChange={handleFeatureFileChange}
+                  disabled={featureUploading}
+                />
+              </label>
             </div>
 
             {/* Submit */}
