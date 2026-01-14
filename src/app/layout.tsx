@@ -1,5 +1,6 @@
 import type React from "react"
 import type { Metadata, Viewport } from "next"
+import Script from "next/script"
 import { Inter, Montserrat } from "next/font/google"
 import Footer from "../components/footer"
 import SiteBackground from "../components/sitebackground"
