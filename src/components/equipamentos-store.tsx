@@ -85,9 +85,10 @@ export default function EquipamentosStore({ categoria }: EquipamentosStoreProps)
   const equipamentosFiltrados = useMemo(() => {
     let list = equipamentos
       .filter((equip) => (linhaSelecionada === "Todos" ? true : equip.linha === linhaSelecionada))
-      .filter((equip) =>
-        (equip.nome + " " + equip.desc).toLowerCase().includes(termoBusca.toLowerCase())
-      );
+      .filter((equip) => {
+        const searchContent = `${equip.nome} ${equip.desc} ${equip.codigo || ""}`.toLowerCase();
+        return searchContent.includes(termoBusca.toLowerCase());
+      });
 
     if (sort === "nome_asc") list = [...list].sort((a, b) => a.nome.localeCompare(b.nome));
     if (sort === "nome_desc") list = [...list].sort((a, b) => b.nome.localeCompare(a.nome));
@@ -160,7 +161,7 @@ export default function EquipamentosStore({ categoria }: EquipamentosStoreProps)
                 value={termoBusca}
                 onChange={(e) => setTermoBusca(e.target.value)}
                 className="w-full rounded-full border border-white/10 bg-white/5 py-3 px-4 text-white placeholder-white/40 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition"
-                placeholder="Buscar equipamento..."
+                placeholder="Buscar por nome ou código..."
               />
               <button
                 className="rounded-full bg-orange-500 text-black font-extrabold px-5 py-3 hover:bg-orange-400 transition whitespace-nowrap"
